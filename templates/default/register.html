@@ -1,0 +1,33 @@
+{% extends "default/auth/register.html" %} 
+{% block form %}
+	<form class="p-t-15" method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		<div class="row">
+            <div class="col-sm-6">
+                <div class="form-group form-group-default">
+                	<label>{{form.nome.label_tag}}</label>
+                    {{form.nome}}
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group form-group-default">
+                	<label>{{form.sobrenome.label_tag}}</label>
+                    {{form.sobrenome}}
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group form-group-default">
+                	<label>{{form.email.label_tag}}</label>
+                    {{form.email}}
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group form-group-default">
+                	<label>{{form.password.label_tag}}</label>
+                    {{form.password}}
+                </div>
+            </div>
+        </div>
+		<input class="btn btn-primary btn-cons m-t-10" type="submit" value="Cadastrar" />
+	</form>
+{% endblock %}

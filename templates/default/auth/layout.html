@@ -1,0 +1,86 @@
+{% load staticfiles %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <!-- META TAGS -->
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta charset="utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <!-- END META -->
+
+    <title>JDI</title>
+
+    <!-- ICONS -->
+    <link rel="apple-touch-icon" href="{% static 'img/default/icons/60.png' %}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static 'img/default/icons/76.png' %}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'img/default/icons/120.png' %}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'img/default/icons/152.png' %}">
+    <!-- END ICONS -->
+
+    <!-- BASIC CSS -->
+    <link href="{% static 'css/default/pace-theme-flash.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/default/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/default/font-awesome.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/default/jquery.scrollbar.css' %}" rel="stylesheet" type="text/css" media="screen" />
+    <link href="{% static 'css/default/select2.css' %}" rel="stylesheet" type="text/css" media="screen" />
+    <link href="{% static 'css/default/pages-icons.css' %}" rel="stylesheet" type="text/css">
+    <link class="main-stylesheet" href="{% static 'css/default/pages.css' %}" rel="stylesheet" type="text/css" />
+    <!--[if lte IE 9]>
+       <link href="{% static 'css/panel/ie9.css' %}" rel="stylesheet" type="text/css" />
+    <![endif]-->
+    <script type="text/javascript">
+      window.onload = function(){
+        // FIX FOR WINDOWNS 8
+        if (navigator.appVersion.indexOf("Windows NT 6.2") != -1)
+            var css = '<link rel="stylesheet" type="text/css" href="'
+            css += "{% static 'css/panel/windows.chrome.fix.css' %}"
+            css += '" />'
+            document.head.innerHTML += css
+        }
+    </script>
+    <!-- END BASIC CSS -->
+
+    <!-- EXTRA CSS -->
+    {% block css %}{% endblock %}
+    <!-- END EXTRA CSS -->
+
+  </head>
+  <body class="fixed-header">
+    <!-- PAGE-CONTAINER -->
+    {% block content %}{% endblock %}
+    <!-- END PAGE CONTAINER -->
+
+    <!-- JAVASCRIPT -->
+    <script src="{% static 'js/default/pace.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/default/jquery-1.11.1.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/default/modernizr.custom.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/default/jquery-ui.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/default/bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/default/jquery-easy.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/default/jquery.bez.min.js' %}"></script>
+    <script src="{% static 'js/default/jquery.actual.min.js' %}"></script>
+    <script src="{% static 'js/default/jquery.scrollbar.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/default/select2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/default/classie.js' %}"></script>
+    <script src="{% static 'js/default/jquery.validate.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/default/pages.min.js' %}"></script>
+    <script src="{% static 'js/default/scripts.js' %}" type="text/javascript"></script>
+    <script>
+      $(function(){$('#form-login').validate()})
+    </script>
+    <!-- END JAVASCRIPT -->
+
+    <!-- EXTRA JAVASCRIPT -->
+    {% block javascript %}{% endblock %}
+    <!-- END EXTRA JAVASCRIPT -->
+
+  </body>
+</html>

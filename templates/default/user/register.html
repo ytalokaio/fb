@@ -1,0 +1,265 @@
+{% extends "default/panel/layout.html" %}
+{% load staticfiles %}
+
+{% block css %}
+   <link href="{% static 'css/default/datepicker3.css' %}" rel="stylesheet" type="text/css" media="screen">
+{% endblock %}
+
+{% block page_info %}
+   <li>
+      <b>Usuário</b>
+   </li>
+   <li>
+      <a class="active">Cadastro</a>
+   </li>
+{% endblock %}
+
+{% block content %}
+   <div class="bg-white">
+      <!-- START PANEL -->
+      <div class="panel panel-transparent">
+         <div class="panel-heading">
+            <div class="panel-title">
+               Usuário
+            </div>
+            <div class="row">
+               <form autocomplete="off"  method="post" enctype="multipart/form-data" role="form" id="form-personal" novalidate="novalidate">
+                  {% csrf_token %}
+                  <!-- BASIC DATA -->
+                  <div class="col-lg-6 col-md-6 ">
+                     <!-- START PANEL -->
+                     <div class="panel panel-transparent">
+                        <div class="panel-body">
+                           <div class="row clearfix">
+                              <div class="col-sm-6">
+                                 <div class="form-group form-group-default required" aria-required="true">
+                                    <label>{{form.nome.label_tag}}</label>
+                                    {{form.nome}}
+                                 </div>
+                              </div>
+                              <div class="col-sm-6">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.sobrenome.label_tag}}</label>
+                                    {{form.sobrenome}}
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-sm-5">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.data_nascimento.label_tag}}</label>
+                                    {{form.data_nascimento}}
+                                 </div>
+                              </div>
+                              <div class="col-sm-4">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.cpf.label_tag}}</label>
+                                    {{form.cpf}}
+                                 </div>
+                              </div>
+                              <div class="col-sm-3">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.genero.label_tag}}</label>
+                                    {{form.genero}}
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-sm-6">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.rg.label_tag}}</label>
+                                    {{form.rg}}
+                                 </div>
+                              </div>
+                              <div class="col-sm-6">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.orgaoemissor.label_tag}}</label>
+                                    {{form.orgaoemissor}}
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-sm-6">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.email.label_tag}}</label>
+                                    {{form.email}}
+                                 </div>
+                              </div>
+                              <div class="col-sm-6">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.tipo_usuario.label_tag}}</label>
+                                    {{form.tipo_usuario}}
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-sm-6">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.password.label_tag}}</label>
+                                    {{form.password}}
+                                 </div>
+                              </div>
+                              <div class="col-sm-6">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.repetir_password.label_tag}}</label>
+                                    {{form.repetir_password}}
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-sm-12">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.foto.label_tag}}</label>
+                                    {{form.foto}}
+                                    <img id="imgLoad" src="#" alt="" />
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <!-- END PANEL -->
+                  </div>
+                  <!-- END BASIC DATA -->
+                  <!-- ADDRESS DATA -->
+                  <div class="col-lg-6 col-md-6 ">
+                     <!-- START PANEL -->
+                     <div class="panel panel-transparent">
+                        <div class="panel-body">
+                           <div class="row clearfix">
+                              <div class="col-sm-4">
+                                 <div class="form-group form-group-default required" aria-required="true">
+                                    <label>{{form.pais.label_tag}}</label>
+                                    {{form.pais}}
+                                 </div>
+                              </div>
+                              <div class="col-sm-4">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.estado.label_tag}}</label>
+                                    {{form.estado}}
+                                 </div>
+                              </div>
+                              <div class="col-sm-4">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.cep.label_tag}}</label>
+                                    {{form.cep}}
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-sm-6">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.cidade.label_tag}}</label>
+                                    {{form.cidade}}
+                                 </div>
+                              </div>
+                              <div class="col-sm-6">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.bairro.label_tag}}</label>
+                                    {{form.bairro}}
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-sm-12">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.rua.label_tag}}</label>
+                                    {{form.rua}}
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-sm-6">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.numero.label_tag}}</label>
+                                    {{form.numero}}
+                                 </div>
+                              </div>
+                              <div class="col-sm-6">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.complemento.label_tag}}</label>
+                                    {{form.complemento}}
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-sm-12">
+                                 <div class="form-group form-group-default">
+                                    <label>{{form.pontoreferencia.label_tag}}</label>
+                                    {{form.pontoreferencia}}
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <!-- END PANEL -->
+                  </div>
+                  <!-- END ADDRESS DATA -->
+                  <div class="clearfix"></div>
+                  <input type="submit" class="btn btn-primary" value="Cadastrar">
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+{% endblock %}
+
+{% block javascript %}
+   <script src="{% static 'js/default/bootstrap-datepicker.js' %}" type="text/javascript"></script>
+   <script src="{% static 'js/default/jquery.inputmask.min.js' %}" type="text/javascript"></script>
+   <script>
+      $(document).ready(function() {
+         //Date Picker
+         $('#id_data_nascimento').datepicker();   
+      
+         //Input mask
+         $("#id_cpf").mask("999.999.999-99");
+         $("#id_rg").mask("99.999.999-9");
+         $("#id_cep").mask("99.999-999");
+      
+         //Select2
+         $("#id_tipo_usuario").select2();
+         $("#id_genero").select2();
+
+         function readURL(input) {
+         if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function (e) {
+                $('#imgLoad').attr('src', e.target.result);
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+            }
+         }
+
+         $("#id_foto").change(function(){
+            readURL(this);
+         });
+      });
+
+      //Service CEP
+      function get_cep_data(value){
+         var cep = value.replace(/\D/g,'');
+         var url = "http://"+location.host+"/framework/service/cep/"
+         if(cep){
+            $.ajax({
+              type: 'GET',
+              url: url,
+              data:{'cep':cep},
+              dataType:'json',
+              success: function(response) {
+                  console.log(response)
+                  document.getElementById("id_estado").value = response.uf
+                  document.getElementById("id_cidade").value = response.cidade
+                  document.getElementById("id_bairro").value = response.bairro
+                  document.getElementById("id_rua").value = response.logradouro
+              },
+              error: function(response) {
+                  console.log(response)
+              }
+            });
+         }
+      };
+   </script>
+{% endblock %}
+
