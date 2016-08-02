@@ -45,155 +45,27 @@
                               </div>
                            </div>
                            <div class="row">
-                              <div class="col-sm-5">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.data_nascimento.label_tag}}</label>
-                                    {{form.data_nascimento}}
-                                 </div>
-                              </div>
-                              <div class="col-sm-4">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.cpf.label_tag}}</label>
-                                    {{form.cpf}}
-                                 </div>
-                              </div>
-                              <div class="col-sm-3">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.genero.label_tag}}</label>
-                                    {{form.genero}}
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="row">
-                              <div class="col-sm-6">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.rg.label_tag}}</label>
-                                    {{form.rg}}
-                                 </div>
-                              </div>
-                              <div class="col-sm-6">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.orgaoemissor.label_tag}}</label>
-                                    {{form.orgaoemissor}}
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="row">
-                              <div class="col-sm-6">
+                              <div class="col-sm-12">
                                  <div class="form-group form-group-default">
                                     <label>{{form.email.label_tag}}</label>
                                     {{form.email}}
                                  </div>
-                              </div>
-                              <div class="col-sm-6">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.tipo_usuario.label_tag}}</label>
-                                    {{form.tipo_usuario}}
-                                 </div>
-                              </div>
+                              </div>                              
                            </div>
                            <div class="row">
-                              <div class="col-sm-6">
+                              <div class="col-sm-12">
                                  <div class="form-group form-group-default">
                                     <label>{{form.password.label_tag}}</label>
                                     {{form.password}}
                                  </div>
                               </div>
-                              <div class="col-sm-6">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.repetir_password.label_tag}}</label>
-                                    {{form.repetir_password}}
-                                 </div>
-                              </div>
                            </div>
-                           <div class="row">
-                              <div class="col-sm-12">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.foto.label_tag}}</label>
-                                    {{form.foto}}
-                                    <img id="imgLoad" src="#" alt="" />
-                                 </div>
-                              </div>
-                           </div>
+                           
                         </div>
                      </div>
                      <!-- END PANEL -->
                   </div>
-                  <!-- END BASIC DATA -->
-                  <!-- ADDRESS DATA -->
-                  <div class="col-lg-6 col-md-6 ">
-                     <!-- START PANEL -->
-                     <div class="panel panel-transparent">
-                        <div class="panel-body">
-                           <div class="row clearfix">
-                              <div class="col-sm-4">
-                                 <div class="form-group form-group-default required" aria-required="true">
-                                    <label>{{form.pais.label_tag}}</label>
-                                    {{form.pais}}
-                                 </div>
-                              </div>
-                              <div class="col-sm-4">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.estado.label_tag}}</label>
-                                    {{form.estado}}
-                                 </div>
-                              </div>
-                              <div class="col-sm-4">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.cep.label_tag}}</label>
-                                    {{form.cep}}
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="row">
-                              <div class="col-sm-6">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.cidade.label_tag}}</label>
-                                    {{form.cidade}}
-                                 </div>
-                              </div>
-                              <div class="col-sm-6">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.bairro.label_tag}}</label>
-                                    {{form.bairro}}
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="row">
-                              <div class="col-sm-12">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.rua.label_tag}}</label>
-                                    {{form.rua}}
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="row">
-                              <div class="col-sm-6">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.numero.label_tag}}</label>
-                                    {{form.numero}}
-                                 </div>
-                              </div>
-                              <div class="col-sm-6">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.complemento.label_tag}}</label>
-                                    {{form.complemento}}
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="row">
-                              <div class="col-sm-12">
-                                 <div class="form-group form-group-default">
-                                    <label>{{form.pontoreferencia.label_tag}}</label>
-                                    {{form.pontoreferencia}}
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <!-- END PANEL -->
-                  </div>
-                  <!-- END ADDRESS DATA -->
+                  <!-- END BASIC DATA -->                 
                   <div class="clearfix"></div>
                   <input type="submit" class="btn btn-primary" value="Cadastrar">
                </form>
@@ -240,7 +112,7 @@
       //Service CEP
       function get_cep_data(value){
          var cep = value.replace(/\D/g,'');
-         var url = "http://"+location.host+"/framework/service/cep/"
+         var url = "http://"+location.host+"/jdi/service/cep/"
          if(cep){
             $.ajax({
               type: 'GET',

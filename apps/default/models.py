@@ -167,7 +167,7 @@ class Usuario(AbstractBaseUser):
 	    return self.is_admin
 
 	def __str__(self):
-		return self.nomecompleto
+		return self.email
 
 class TelefoneUsuario(models.Model):
 	id_telefone_usuario = models.AutoField(primary_key=True)

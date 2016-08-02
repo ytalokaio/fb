@@ -373,12 +373,7 @@ class CompanyRegisterForm(forms.Form):
     complemento = forms.CharField(label='Complemento:', max_length=45)
     pontoreferencia = forms.CharField(label='Ponto de referência:', max_length=45, widget=forms.Textarea)
 
-    # FIEDS TELEFONE
-    tipo_telefone = forms.ModelChoiceField (TipoTelefone, label='Tipo de Telefone:', widget=forms.Select())
-    numero = forms.CharField(label='Numero:', max_length=15)
-    ramal = forms.CharField(label='Ramal:', max_length=4)
-    nome_contato = forms.CharField(label='Contato:', max_length=45)
-
+    
     def __init__(self, *args, **kwargs):
         super(CompanyRegisterForm, self).__init__(*args, **kwargs)
 
@@ -454,7 +449,33 @@ class CompanyRegisterForm(forms.Form):
         # Pontoreferencia Fields widget
         self.fields['pontoreferencia'].widget.attrs['class'] = 'form-control'
         self.fields['pontoreferencia'].widget.attrs['placeholder'] = 'Digite um ponto de referência'
+        
+        pass
 
+'''
+---------------------------------------
+            END COMPANY FORMS
+---------------------------------------
+'''
+
+
+
+'''
+---------------------------------------
+            PHONE FORMS
+---------------------------------------
+'''
+
+class PhoneForm(forms.Form):
+
+    # FIEDS TELEFONE
+    tipo_telefone = forms.ModelChoiceField (TipoTelefone, label='Tipo de Telefone:', widget=forms.Select())
+    numero = forms.CharField(label='Numero:', max_length=15)
+    ramal = forms.CharField(label='Ramal:', max_length=4)
+    nome_contato = forms.CharField(label='Contato:', max_length=45)
+
+    def __init__(self, *args, **kwargs):
+        super(PhoneForm, self).__init__(*args, **kwargs)
 
         '''
             FIELDS TELEFONE
@@ -466,20 +487,18 @@ class CompanyRegisterForm(forms.Form):
 
         # Numero Fields widget
         self.fields['numero'].widget.attrs['class'] = 'form-control'
-        self.fields['numero'].widget.attrs['placeholder'] = 'Digite o numero'
+        self.fields['numero'].widget.attrs['placeholder'] = 'numero'
 
         # Ramal Fields widget
         self.fields['ramal'].widget.attrs['class'] = 'form-control'
-        self.fields['ramal'].widget.attrs['placeholder'] = 'Digite o ramal'
+        self.fields['ramal'].widget.attrs['placeholder'] = 'ramal'
 
         # Nomecontato Fields widget
         self.fields['nome_contato'].widget.attrs['class'] = 'form-control'
-        self.fields['nome_contato'].widget.attrs['placeholder'] = 'Digite o nome do contato'
-
-        pass
+        self.fields['nome_contato'].widget.attrs['placeholder'] = 'nome do contato'
 
 '''
 ---------------------------------------
-            END COMPANY FORMS
+            END PHONE FORMS
 ---------------------------------------
 '''
