@@ -26,6 +26,7 @@ from .forms import UserRegisterForm # USER FORMS
 from .forms import CompanyRegisterForm # COMPANY FORMS
 from .forms import PhoneForm # PHONE FORMS
 import requests
+import re
 ##################################################
 
 
@@ -173,12 +174,30 @@ class UserRegister(JSONResponseMixin,View):
 	def post(self, request, *args, **kwargs):
 		context = {}
 		if request.method == 'POST':		    
-			form = UserRegisterForm(request.POST)
+			form = UserRegisterForm(request.POST,request.FILES)
 			
 			nome = request.POST['nome']
 			sobrenome = request.POST['sobrenome']
 			email = request.POST['email']
 			password = request.POST['password']
+			tipo_usuario = request.POST['tipo_usuario']
+			genero = request.POST['genero']
+			data_nascimento = request.POST['data_nascimento']
+			cpf = request.POST['cpf']
+			rg = request.POST['rg']
+			orgaoemissor = request.POST['orgaoemissor']
+			foto = request.POST['foto']
+
+			cep = request.POST['cep']
+			rua = request.POST['rua']
+			bairro = request.POST['bairro']
+			cidade = request.POST['cidade']
+			estado = request.POST['estado']
+			pais = request.POST['pais']
+
+			numero = request.POST['numero']
+			complemento = request.POST['complemento']
+			pontoreferencia = request.POST['pontoreferencia']
 
 			
 			if not nome:
@@ -190,19 +209,77 @@ class UserRegister(JSONResponseMixin,View):
 			if not password:
 				context['error_msg'] = 'password cannot be empty !'
 
-			
+			if not tipo_usuario:
+				context['error_msg'] = 'tipo_usuario cannot be empty !'
+			if not genero:
+				context['error_msg'] = 'genero cannot be empty !'
+			if not data_nascimento:
+				context['error_msg'] = 'data_nascimento cannot be empty !'
+			if not cpf:
+				context['error_msg'] = 'cpf cannot be empty !'
+			if not rg:
+				context['error_msg'] = 'rg cannot be empty !'
+			if not orgaoemissor:
+				context['error_msg'] = 'orgaoemissor cannot be empty !'
+			'''
+			if not foto:
+				context['error_msg'] = 'foto cannot be empty !'
+			'''
+			if not cep:
+				context['error_msg'] = 'cep cannot be empty !'
+			if not rua:
+				context['error_msg'] = 'rua cannot be empty !'
+			if not bairro:
+				context['error_msg'] = 'bairro cannot be empty !'
+			if not cidade:
+				context['error_msg'] = 'cidade cannot be empty !'
+			if not estado:
+				context['error_msg'] = 'estado cannot be empty !'
+			if not pais:
+				context['error_msg'] = 'pais cannot be empty !'
+			if not numero:
+				context['error_msg'] = 'numero cannot be empty !'
+			if not complemento:
+				context['error_msg'] = 'complemento cannot be empty !'
+			if not pontoreferencia:
+				context['error_msg'] = 'pontoreferencia cannot be empty !'
 
-			if not context:			
+			if not context:
+
+				id_logradouro = Logradouro()
+				id_logradouro.cep = cep
+				id_logradouro.nome = nome
+				id_logradouro.bairro = bairro
+				id_logradouro.cidade = cidade
+				id_logradouro.estado = estado
+				id_logradouro.pais = pais
+				id_logradouro.save()
+
+				id_endereco = Endereco()
+				id_endereco.id_logradouro = id_logradouro
+				id_endereco.numero = numero
+				id_endereco.complemento = complemento
+				id_endereco.pontoreferencia = pontoreferencia
+				id_endereco.save()
+
 				usuario = Usuario.objects.create_user(email, password)
 				usuario.nome = nome
 				usuario.sobrenome = sobrenome
-				usuario.nomecompleto = nome +" "+sobrenome				
+				usuario.nomecompleto = nome +" "+sobrenome
+				usuario.tipo_usuario = tipo_usuario
+				usuario.genero = genero
+				usuario.data_nascimento = data_nascimento
+				usuario.cpf = cpf
+				usuario.rg = rg
+				usuario.orgaoemissor = orgaoemissor
+				usuario.foto = foto
+				usuario.id_endereco = id_endereco
 				usuario.save()
 
 				return redirect(reverse_lazy("user-list"))
 
 			else:
-				form = UserRegisterForm()
+				form = UserRegisterForm(request.POST)
 
 		return render(request, 'default/user/register.html', {'form': form})
 
@@ -289,6 +366,37 @@ class UserDelete(JSONResponseMixin,DeleteView):
 			COMPANY METHODS
 ----------------------------------------
 '''
+
+def validaCNPJ(cnpj):
+	empresa = Empresa.objects.filter(cnpj=cnpj)
+	if empresa:
+		return False
+
+	cnpj = ''.join(re.findall('\d', str(cnpj)))
+
+	if (not cnpj) or (len(cnpj) < 14):
+	    return False
+
+	# Pega apenas os 12 primeiros dígitos do CNPJ e gera os 2 dígitos que faltam
+	inteiros = list(map(int, cnpj))
+	novo = inteiros[:12]
+
+	prod = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+	while len(novo) < 14:
+	    r = sum([x*y for (x, y) in zip(novo, prod)]) % 11
+	    if r > 1:
+	        f = 11 - r
+	    else:
+	        f = 0
+	    novo.append(f)
+	    prod.insert(0, 6)
+
+	# Se o número gerado coincidir com o número original, é válido
+	if novo != inteiros:
+	    return False
+    
+
+
 class CompanyRegister(JSONResponseMixin,View):
 	def get(self, request):
 		form = CompanyRegisterForm
@@ -307,7 +415,6 @@ class CompanyRegister(JSONResponseMixin,View):
 			razaosocial = request.POST['razaosocial']
 			nomefantasia = request.POST['nomefantasia']
 			cnpj = request.POST['cnpj']
-			verificada = request.POST.get('verificada', False)
 			ie = request.POST['ie']
 			id_tipo_empresa = request.POST['tipo_empresa']
 
@@ -328,12 +435,13 @@ class CompanyRegister(JSONResponseMixin,View):
 			ramal = request.POST['ramal']
 			nome_contato = request.POST['nome_contato']
 			'''	
+
 			if not razaosocial:
 				context['Razão social'] = ' cannot be empty !'
 			if not nomefantasia:
 				context['Nome Fantasia'] = ' cannot be empty !'
-			if not cnpj:
-				context['CNPJ'] = ' cannot be empty !'			
+			if not cnpj or not validaCNPJ(cnpj):
+				context['CNPJ'] = ' vazio ou ja existente !'			
 			if not ie:
 				context['IE'] = ' cannot be empty !'
 			if not id_tipo_empresa:
@@ -409,7 +517,7 @@ class CompanyRegister(JSONResponseMixin,View):
 				empresa.razaosocial = razaosocial
 				empresa.nomefantasia = nomefantasia 
 				empresa.cnpj = cnpj
-				empresa.verificada = verificada
+				empresa.verificada = True
 				empresa.ie = ie
 				empresa.id_tipo_empresa = id_tipo_empresa				
 				empresa.id_endereco = id_endereco
@@ -473,7 +581,6 @@ class CompanyEdit(JSONResponseMixin,View):
 			razaosocial = request.POST['razaosocial']
 			nomefantasia = request.POST['nomefantasia']
 			cnpj = request.POST['cnpj']
-			verificada = request.POST.get('verificada', False)
 			ie = request.POST['ie']
 			id_tipo_empresa = request.POST['tipo_empresa']
 
@@ -498,7 +605,7 @@ class CompanyEdit(JSONResponseMixin,View):
 				context['Razão social'] = ' cannot be empty !'
 			if not nomefantasia:
 				context['Nome Fantasia'] = ' cannot be empty !'
-			if not cnpj:
+			if not cnpj or not validaCNPJ(cnpj):
 				context['CNPJ'] = ' cannot be empty !'			
 			if not ie:
 				context['IE'] = ' cannot be empty !'
@@ -565,7 +672,7 @@ class CompanyEdit(JSONResponseMixin,View):
 				empresa.razaosocial = razaosocial
 				empresa.nomefantasia = nomefantasia 
 				empresa.cnpj = cnpj
-				empresa.verificada = verificada
+				empresa.verificada = True
 				empresa.ie = ie
 				empresa.id_tipo_empresa = id_tipo_empresa				
 				empresa.id_endereco = id_endereco

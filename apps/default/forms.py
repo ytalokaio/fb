@@ -356,7 +356,6 @@ class CompanyRegisterForm(forms.Form):
     razaosocial = forms.CharField(label='Razão Social:', max_length=100)
     nomefantasia = forms.CharField(label='Nome Fantasia:', max_length=100)
     cnpj = forms.CharField(label='CNPJ:', max_length=20)
-    verificada = forms.BooleanField(label='Verificada')
     ie = forms.CharField(label='Inscrição Estadual', max_length=45)
     tipo_empresa = forms.ModelChoiceField (TipoEmpresa, label='Tipo de Empresa:', widget=forms.Select())
 
