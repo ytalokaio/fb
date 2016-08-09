@@ -26,6 +26,7 @@ from .forms import UserRegisterForm # USER FORMS
 from .forms import CompanyRegisterForm # COMPANY FORMS
 from .forms import PhoneForm # PHONE FORMS
 import requests
+import re
 ##################################################
 
 
@@ -365,6 +366,37 @@ class UserDelete(JSONResponseMixin,DeleteView):
 			COMPANY METHODS
 ----------------------------------------
 '''
+
+def validaCNPJ(cnpj):
+	empresa = Empresa.objects.filter(cnpj=cnpj)
+	if empresa:
+		return False
+
+	cnpj = ''.join(re.findall('\d', str(cnpj)))
+
+	if (not cnpj) or (len(cnpj) < 14):
+	    return False
+
+	# Pega apenas os 12 primeiros dígitos do CNPJ e gera os 2 dígitos que faltam
+	inteiros = list(map(int, cnpj))
+	novo = inteiros[:12]
+
+	prod = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+	while len(novo) < 14:
+	    r = sum([x*y for (x, y) in zip(novo, prod)]) % 11
+	    if r > 1:
+	        f = 11 - r
+	    else:
+	        f = 0
+	    novo.append(f)
+	    prod.insert(0, 6)
+
+	# Se o número gerado coincidir com o número original, é válido
+	if novo != inteiros:
+	    return False
+    
+
+
 class CompanyRegister(JSONResponseMixin,View):
 	def get(self, request):
 		form = CompanyRegisterForm
@@ -383,7 +415,6 @@ class CompanyRegister(JSONResponseMixin,View):
 			razaosocial = request.POST['razaosocial']
 			nomefantasia = request.POST['nomefantasia']
 			cnpj = request.POST['cnpj']
-			verificada = request.POST.get('verificada', False)
 			ie = request.POST['ie']
 			id_tipo_empresa = request.POST['tipo_empresa']
 
@@ -404,12 +435,13 @@ class CompanyRegister(JSONResponseMixin,View):
 			ramal = request.POST['ramal']
 			nome_contato = request.POST['nome_contato']
 			'''	
+
 			if not razaosocial:
 				context['Razão social'] = ' cannot be empty !'
 			if not nomefantasia:
 				context['Nome Fantasia'] = ' cannot be empty !'
-			if not cnpj:
-				context['CNPJ'] = ' cannot be empty !'			
+			if not cnpj or not validaCNPJ(cnpj):
+				context['CNPJ'] = ' vazio ou ja existente !'			
 			if not ie:
 				context['IE'] = ' cannot be empty !'
 			if not id_tipo_empresa:
@@ -485,7 +517,7 @@ class CompanyRegister(JSONResponseMixin,View):
 				empresa.razaosocial = razaosocial
 				empresa.nomefantasia = nomefantasia 
 				empresa.cnpj = cnpj
-				empresa.verificada = verificada
+				empresa.verificada = True
 				empresa.ie = ie
 				empresa.id_tipo_empresa = id_tipo_empresa				
 				empresa.id_endereco = id_endereco
@@ -549,7 +581,6 @@ class CompanyEdit(JSONResponseMixin,View):
 			razaosocial = request.POST['razaosocial']
 			nomefantasia = request.POST['nomefantasia']
 			cnpj = request.POST['cnpj']
-			verificada = request.POST.get('verificada', False)
 			ie = request.POST['ie']
 			id_tipo_empresa = request.POST['tipo_empresa']
 
@@ -574,7 +605,7 @@ class CompanyEdit(JSONResponseMixin,View):
 				context['Razão social'] = ' cannot be empty !'
 			if not nomefantasia:
 				context['Nome Fantasia'] = ' cannot be empty !'
-			if not cnpj:
+			if not cnpj or not validaCNPJ(cnpj):
 				context['CNPJ'] = ' cannot be empty !'			
 			if not ie:
 				context['IE'] = ' cannot be empty !'
@@ -641,7 +672,7 @@ class CompanyEdit(JSONResponseMixin,View):
 				empresa.razaosocial = razaosocial
 				empresa.nomefantasia = nomefantasia 
 				empresa.cnpj = cnpj
-				empresa.verificada = verificada
+				empresa.verificada = True
 				empresa.ie = ie
 				empresa.id_tipo_empresa = id_tipo_empresa				
 				empresa.id_endereco = id_endereco
