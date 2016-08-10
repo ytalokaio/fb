@@ -370,12 +370,12 @@ class UserDelete(JSONResponseMixin,DeleteView):
 def validaCNPJ(cnpj):
 	empresa = Empresa.objects.filter(cnpj=cnpj)
 	if empresa:
-		return False
+		return True
 
 	cnpj = ''.join(re.findall('\d', str(cnpj)))
 
 	if (not cnpj) or (len(cnpj) < 14):
-	    return False
+	    return True
 
 	# Pega apenas os 12 primeiros dígitos do CNPJ e gera os 2 dígitos que faltam
 	inteiros = list(map(int, cnpj))
@@ -392,8 +392,10 @@ def validaCNPJ(cnpj):
 	    prod.insert(0, 6)
 
 	# Se o número gerado coincidir com o número original, é válido
-	if novo != inteiros:
+	if novo == inteiros:
 	    return False
+	else:
+		return True
     
 
 
@@ -440,8 +442,8 @@ class CompanyRegister(JSONResponseMixin,View):
 				context['Razão social'] = ' cannot be empty !'
 			if not nomefantasia:
 				context['Nome Fantasia'] = ' cannot be empty !'
-			if not cnpj or not validaCNPJ(cnpj):
-				context['CNPJ'] = ' vazio ou ja existente !'			
+			if validaCNPJ(cnpj):
+				context['CNPJ'] = ' vazio ou ja existente !'
 			if not ie:
 				context['IE'] = ' cannot be empty !'
 			if not id_tipo_empresa:
@@ -605,8 +607,8 @@ class CompanyEdit(JSONResponseMixin,View):
 				context['Razão social'] = ' cannot be empty !'
 			if not nomefantasia:
 				context['Nome Fantasia'] = ' cannot be empty !'
-			if not cnpj or not validaCNPJ(cnpj):
-				context['CNPJ'] = ' cannot be empty !'			
+			if validaCNPJ(cnpj):
+				context['CNPJ'] = ' vazio ou ja existente !'
 			if not ie:
 				context['IE'] = ' cannot be empty !'
 			if not id_tipo_empresa:
