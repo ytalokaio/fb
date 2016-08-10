@@ -11,11 +11,10 @@ from django.contrib.auth.decorators import login_required
 ##################################################
 #				CUSTOM IMPORTS                   #
 ##################################################
-
+from .views import StartupRegister
 ##################################################
 
-'''
+
 urlpatterns = (
-	url(r'^exemple/$', login_required(Exemple.as_view()), name="exemple"),
+	url(r'^startup/register/$', login_required(StartupRegister.as_view()), name="startup-register"),
 )
-'''
