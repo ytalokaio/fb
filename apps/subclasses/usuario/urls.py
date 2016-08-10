@@ -14,8 +14,6 @@ from django.contrib.auth.decorators import login_required
 
 ##################################################
 
-'''
 urlpatterns = (
-	url(r'^exemple/$', login_required(Exemple.as_view()), name="exemple"),
+	#url(r'^exemple/$', login_required(Exemple.as_view()), name="exemple"),
 )
-'''
