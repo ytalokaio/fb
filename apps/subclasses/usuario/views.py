@@ -28,7 +28,7 @@ from apps.default.views import JSONResponseMixin
 
 
 '''
-	Startup Functions
+	Employee Functions
 '''
 class EmployeeRegister(JSONResponseMixin,View):
 	def get(self, request):
