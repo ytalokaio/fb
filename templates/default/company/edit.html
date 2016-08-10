@@ -37,7 +37,8 @@
          <a data-toggle="tab" href="#tab3"><i class="fa fa-credit-card tab-icon"></i> 
             <span>Contato</span>
          </a>
-       </li>       
+       </li>
+       {% block subclass_itens %}{% endblock %}     
      </ul>
      <!-- Tab panes -->
 
@@ -213,7 +214,8 @@
              </div>
            </div>
          </div>
-       </div>       
+       </div>
+       {% block subclass_form %}{% endblock %}       
        <div class="padding-20 bg-white">
          <ul class="pager wizard">
            <li class="next">

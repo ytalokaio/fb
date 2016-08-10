@@ -648,8 +648,8 @@ class CompanyEdit(JSONResponseMixin,View):
 			if not context:
 
 				empresa = Empresa.objects.get(pk=pk)
-				id_endereco = Endereco.objects.filter(id_endereco=empresa.pk)[0]
-				id_logradouro = Logradouro.objects.filter(id_logradouro=id_endereco.pk)[0]
+				id_endereco = Endereco.objects.get(id_endereco=empresa.id_endereco)
+				id_logradouro = Logradouro.objects.get(id_logradouro=id_endereco.id_logradouro)
 
 				id_logradouro = Logradouro()
 				id_logradouro.cep = cep
