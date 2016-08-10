@@ -1,7 +1,7 @@
 ##################################################
 #               CUSTOM IMPORTS                   #
 ##################################################
-from apps.default.models import Projeto # MODELS
+from .models import Projeto # MODELS
 ##################################################
 
 

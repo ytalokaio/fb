@@ -4,9 +4,9 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from apps.default.models import Usuario, Projeto, Genero, Logradouro, Endereco, TipoEmpresa, Empresa, TipoUsuario, TipoRelacao, TipoRelacaoEmpresa, TipoDocumento, TipoTelefone, TelefoneUsuario, TelefoneEmpresa, UsuarioEmpresa,Visao, RelacaoEmpresa, RelacaoUsuario,Documento
+from .models import Usuario, Projeto, Genero, Logradouro, Endereco, TipoEmpresa, Empresa, TipoUsuario, TipoRelacao, TipoRelacaoEmpresa, TipoDocumento, TipoTelefone, TelefoneUsuario, TelefoneEmpresa, UsuarioEmpresa,Visao, RelacaoEmpresa, RelacaoUsuario,Documento
 
-from apps.default.forms import UserCreationForm, UserChangeForm
+from .forms import UserCreationForm, UserChangeForm
 
 class UserAdmin(BaseUserAdmin):
     # Formularios para adicionar ou alterar instancias dos usuarios
