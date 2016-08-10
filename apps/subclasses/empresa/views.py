@@ -19,8 +19,10 @@ from django.forms import formset_factory
 ##################################################
 #				CUSTOM IMPORTS                   #
 ##################################################
+from apps.default.models import Projeto, Usuario, Empresa, Logradouro, Endereco, TipoEmpresa, TipoTelefone, TelefoneEmpresa # MODELS
 from .forms import StartupRegisterForm
-from apps.default.views import JSONResponseMixin
+from apps.default.forms import PhoneForm # PHONE FORMS
+from apps.default.views import JSONResponseMixin, validaCNPJ
 from .models import Startup
 ##################################################
 
@@ -34,7 +36,7 @@ from .models import Startup
 
 class StartupRegister(JSONResponseMixin,View):
 	def get(self, request):
-		form = StartupRegister
+		form = StartupRegisterForm
 		formset = formset_factory(PhoneForm)
 		return render (request, 'subclasses/empresa/startup/register.html', {'form':form,'formset':formset})
 
@@ -44,7 +46,7 @@ class StartupRegister(JSONResponseMixin,View):
 
 			PhoneFormSet = formset_factory(PhoneForm)		
 			formset = PhoneFormSet(request.POST, request.FILES)
-			form = StartupRegister(request.POST)
+			form = StartupRegisterForm(request.POST, request.FILES)
 	
 			razaosocial = request.POST['razaosocial']
 			nomefantasia = request.POST['nomefantasia']
@@ -72,14 +74,16 @@ class StartupRegister(JSONResponseMixin,View):
 
 			# EXTRAS
 			representante = request.POST['representante']
-			logo = request.POST['logo']
+			logo = request.FILES['logo']
 
 			if not razaosocial:
 				context['Razão social'] = ' cannot be empty !'
 			if not nomefantasia:
 				context['Nome Fantasia'] = ' cannot be empty !'
-			if not cnpj or not validaCNPJ(cnpj):
-				context['CNPJ'] = ' vazio ou ja existente !'			
+			
+			if validaCNPJ(cnpj):
+				context['CNPJ'] = ' vazio ou ja existente !'		
+				
 			if not ie:
 				context['IE'] = ' cannot be empty !'
 			if not id_tipo_empresa:
@@ -179,13 +183,13 @@ class StartupRegister(JSONResponseMixin,View):
 				startup = Startup()
 				startup.empresa = empresa
 				startup.representante = representante
-				statup.logo = logo
-				statup.save()
+				startup.logo = logo
+				startup.save()
 					
 				return redirect(reverse_lazy("startup-list"))
 
 		else:
-			form = StartupRegister()
+			form = StartupRegisterForm
 			formset = formset_factory(PhoneForm)
 
 		return render(request, 'subclasses/empresa/startup/register.html', {'form': form, 'formset':formset ,'context':context})
@@ -195,7 +199,7 @@ class StartupEdit(JSONResponseMixin,View):
 	def get(self, request, pk=None):
 		startup = Startup.objects.get(pk=pk)
 		telefone = TelefoneEmpresa.objects.filter(id_empresa=pk)[0]
-		form = StartupRegister(
+		form = StartupRegisterForm(
 			initial={
 			'razaosocial': startup.empresa.razaosocial,
 			'nomefantasia': startup.empresa.nomefantasia,
@@ -228,7 +232,7 @@ class StartupEdit(JSONResponseMixin,View):
 	def post(self, request, pk=None, *args, **kwargs):
 		context = {}
 		if request.method == 'POST':		    
-			form = StartupRegister(request.POST)
+			form = StartupRegisterForm(request.POST, request.FILES)
 			
 			razaosocial = request.POST['razaosocial']
 			nomefantasia = request.POST['nomefantasia']
@@ -255,7 +259,7 @@ class StartupEdit(JSONResponseMixin,View):
 
 			# EXTRAS
 			representante = request.POST['representante']
-			logo = request.POST['logo']
+			logo = request.FILES['logo']
 								
 			if not razaosocial:
 				context['Razão social'] = ' cannot be empty !'
@@ -360,7 +364,7 @@ class StartupEdit(JSONResponseMixin,View):
 				return redirect(reverse_lazy("startup-list"))
 
 		else:
-			form = CompanyRegisterForm()
+			form = StartupRegisterForm()
 
 		return render(request, 'subclasses/empresa/startup/edit.html', {'form': form,'context':context})
 
