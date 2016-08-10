@@ -11,12 +11,12 @@ from django.contrib.auth.decorators import login_required
 ##################################################
 #				CUSTOM IMPORTS                   #
 ##################################################
-from apps.default.views import Register, Login, Logout # AUTH VIEWS
-from apps.default.views import Dashboard # DASHBOARD VIEW
-from apps.default.views import Profile # PROFILE VIEW
-from apps.default.views import UserRegister, UserList, UserDetail, UserEdit, UserDelete # USER VIEWS
-from apps.default.views import CompanyRegister, CompanyList, CompanyDetail, CompanyEdit, CompanyDelete # COMPANY VIEWS
-from apps.default.views import get_cnpj_json, get_cep_json # SERVICES
+from .views import Register, Login, Logout # AUTH VIEWS
+from .views import Dashboard # DASHBOARD VIEW
+from .views import Profile # PROFILE VIEW
+from .views import UserRegister, UserList, UserDetail, UserEdit, UserDelete # USER VIEWS
+from .views import CompanyRegister, CompanyList, CompanyDetail, CompanyEdit, CompanyDelete # COMPANY VIEWS
+from .views import get_cnpj_json, get_cep_json # SERVICES
 ##################################################
 
 
