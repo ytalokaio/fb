@@ -1,0 +1,103 @@
+{% extends "default/panel/layout.html" %} 
+{% load staticfiles %}
+
+{% block css %}
+  <link href="{% static 'css/default/jquery.dataTables.css' %}" rel="stylesheet" type="text/css" />
+  <link href="{% static 'css/default/dataTables.fixedColumns.min.css' %}" rel="stylesheet" type="text/css" />
+  <link href="{% static 'css/default/datatables.responsive.css' %}" rel="stylesheet" type="text/css" media="screen" />
+{% endblock %}
+
+{% block page_info %}
+  <li>
+     <a class="active">Funcionário</a>
+  </li>
+{% endblock %}
+
+{% block content %}
+  <div class="bg-white">
+     <!-- START PANEL -->
+     <div class="panel panel-transparent">
+        <div class="panel-heading">
+           <div class="panel-title">
+              Usuário
+           </div>
+           <div class="btn-group pull-right m-b-10">
+              <a class="btn btn-default" href="/framework/dashboard/employee/register/" type="button">Cadastrar</a>
+              <!--
+                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                 </button>
+                 <ul class="dropdown-menu" role="menu">
+                    <li>
+                      <a href="#">Settings</a>
+                    </li>
+                    <li>
+                      <a href="#">Help</a>
+                    </li>
+                 </ul>
+                 -->
+           </div>
+           <div class="clearfix"></div>
+        </div>
+        <div class="panel-body">
+           <div class="table-responsive">
+              <table class="table table-hover" id="basicTable">
+                 <thead>
+                    <tr>
+                       <th style="width:1%">
+                          <button class="btn">
+                          <i class="pg-trash"></i>
+                          </button>
+                       </th>
+                       <th style="width:20%">Nome</th>
+                       <th style="width:20%">Nickname</th>
+                       <th style="width:15%">Opções</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    {% for funcionario in object_list %}
+                    <tr>
+                       <td class="v-align-middle">
+                          <div class="checkbox ">
+                             <input type="checkbox" value="1" id="checkbox1">
+                             <label for="checkbox1"></label>
+                          </div>
+                       </td>
+                       <td class="v-align-middle ">
+                          <p>{{funcionario.usuario.nomecompleto}}</p>
+                       </td>
+                       <td class="v-align-middle">
+                          <p>{{funcionario.nickname}}</p>
+                       </td>                       
+                       <td class="v-align-middle">
+                          <a href="/framework/dashboard/employee/detail/{{funcionario.pk}}">
+                          <i class="pg-search"></i>
+                          </a>
+                          <a href="/framework/dashboard/employee/edit/{{funcionario.pk}}">
+                          <i class="pg-settings"></i>
+                          </a>
+                          {% if request.user.id_usuario != usuario.id_usuario %}
+                          <a href="/framework/dashboard/employee/delete/{{funcionario.pk}}">
+                          <i class="pg-eraser"></i>
+                          </a>
+                          {% endif %}
+                       </td>
+                    </tr>
+                    {% endfor %}
+                 </tbody>
+              </table>
+           </div>
+        </div>
+     </div>
+     <!-- END PANEL -->
+  </div>
+{% endblock %}
+
+{% block javascript %}
+  <script src="{% static 'js/default/jquery.dataTables.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/default/dataTables.tableTools.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/default/jquery-datatable-bootstrap.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/default/datatables.responsive.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/default/lodash.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/default/tables.js' %}" type="text/javascript"></script>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "default/user/edit.html" %}
+{% load staticfiles %}
+
+{% block subclass_form %}
+ <div class="row">
+    <div class="col-sm-12">
+       <div class="form-group form-group-default">
+          <label>{{form.nickname.label_tag}}</label>
+          {{form.nickname}}
+       </div>
+    </div>
+ </div>
+{% endblock %}
