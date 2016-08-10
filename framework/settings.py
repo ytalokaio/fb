@@ -53,7 +53,11 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 CUSTOM_APPS = [
-    'apps.default',  
+    'apps.default', 
+    
+    # SUBCLASS APPS
+    'apps.subclasses.empresa',
+    'apps.subclasses.usuario',
 ]
 INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS
 

@@ -1,0 +1,46 @@
+{% extends "default/company/register.html" %}
+
+{% block subclass_itens %}
+       <li class="">
+         <a data-toggle="tab" href="#tab3"><i class="fa fa-truck tab-icon"></i> 
+            <span>
+               Extras
+            </span>
+         </a>
+       </li>
+{% endblock %}
+
+{% block subclass_form %}
+       <div class="tab-pane slide-left padding-20" id="tab3">
+         <div class="row row-same-height">
+           <div class="col-md-5 b-r b-dashed b-grey ">
+             <div class="padding-30 m-t-50">
+               <h2>Your Information is safe with us!</h2>
+               <p>We respect your privacy and protect it with strong encryption, plus strict policies . Two-step verification, which we encourage all our customers to use.</p>
+               <p class="small hint-text">Below is a sample page for your cart , Created using pages design UI Elementes</p>
+             </div>
+           </div>
+           <div class="col-md-7">
+             <div class="padding-30">                        
+                 <p>Extras</p>
+                 <div class="form-group-attached">                   
+                   <div class="row clearfix">
+                     <div class="col-sm-4">
+                       <div class="form-group form-group-default">
+                         <label>{{form.representante.label_tag}}</label>
+                         {{form.representante}}
+                       </div>
+                     </div>
+                     <div class="col-sm-4">
+                       <div class="form-group form-group-default">
+                         <label>{{form.logo.label_tag}}</label>
+                         {{form.logo}}
+                       </div>
+                     </div>
+                   </div>
+                 </div>               
+             </div>
+           </div>
+         </div>
+       </div>
+{% endblock %}

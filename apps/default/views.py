@@ -19,7 +19,7 @@ from django.forms import formset_factory
 ##################################################
 #				CUSTOM IMPORTS                   #
 ##################################################
-from apps.default.models import Projeto, Usuario, Empresa, Logradouro, Endereco, TipoEmpresa, TipoTelefone, TelefoneEmpresa # MODELS
+from .models import Projeto, Usuario, Empresa, Logradouro, Endereco, TipoEmpresa, TipoTelefone, TelefoneEmpresa # MODELS
 from .forms import LoginForm, RegisterForm # AUTH FORMS
 from .forms import ProfileForm # PROFILE FORM
 from .forms import UserRegisterForm # USER FORMS
@@ -648,8 +648,8 @@ class CompanyEdit(JSONResponseMixin,View):
 			if not context:
 
 				empresa = Empresa.objects.get(pk=pk)
-				id_endereco = Endereco.objects.filter(id_endereco=empresa.pk)[0]
-				id_logradouro = Logradouro.objects.filter(id_logradouro=id_endereco.pk)[0]
+				id_endereco = Endereco.objects.get(id_endereco=empresa.id_endereco)
+				id_logradouro = Logradouro.objects.get(id_logradouro=id_endereco.id_logradouro)
 
 				id_logradouro = Logradouro()
 				id_logradouro.cep = cep
