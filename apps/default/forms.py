@@ -13,7 +13,7 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 ##################################################
 #               CUSTOM IMPORTS                   #
 ##################################################
-from apps.default.models import Usuario, Genero, TipoUsuario, TipoEmpresa, TipoTelefone, TelefoneEmpresa # MODELS
+from .models import Usuario, Genero, TipoUsuario, TipoEmpresa, TipoTelefone, TelefoneEmpresa # MODELS
 ##################################################
 
 

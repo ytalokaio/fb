@@ -19,7 +19,7 @@ from django.forms import formset_factory
 ##################################################
 #				CUSTOM IMPORTS                   #
 ##################################################
-from apps.default.models import Projeto, Usuario, Empresa, Logradouro, Endereco, TipoEmpresa, TipoTelefone, TelefoneEmpresa # MODELS
+from .models import Projeto, Usuario, Empresa, Logradouro, Endereco, TipoEmpresa, TipoTelefone, TelefoneEmpresa # MODELS
 from .forms import LoginForm, RegisterForm # AUTH FORMS
 from .forms import ProfileForm # PROFILE FORM
 from .forms import UserRegisterForm # USER FORMS
