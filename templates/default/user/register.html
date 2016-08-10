@@ -10,11 +10,16 @@
       <b>Usuário</b>
    </li>
    <li>
-      <a class="active">Cadastro {{form.errors}}</a>
+      <a class="active">Cadastro</a>
    </li>
 {% endblock %}
 
 {% block content %}
+   {% if context %}
+      {%  for title, value in context.items %}
+         {{title}} : {{value}} <br>
+      {% endfor %}
+   {% endif %}
    <div class="bg-white">
       <!-- START PANEL -->
       <div class="panel panel-transparent">
@@ -189,6 +194,7 @@
                                  </div>
                               </div>
                            </div>
+                           {% block subclass_form %}{% endblock %}
                         </div>
                      </div>
                      <!-- END PANEL -->
@@ -209,7 +215,7 @@
    <script>
       $(document).ready(function() {
          //Date Picker
-         $('#id_data_nascimento').datepicker();   
+         //$('#id_data_nascimento').datepicker({ dateFormat: 'dd-mm-yy' });   
       
          //Input mask
          $("#id_cpf").mask("999.999.999-99");
