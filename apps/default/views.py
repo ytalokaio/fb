@@ -112,10 +112,14 @@ class Login(JSONResponseMixin,View):
 			password = request.POST['password']
 			user = authenticate(email=email, password=password)
 			if user is not None:
-				login(request, user)
-				return redirect(reverse_lazy("home"))
+				if user.is_active:
+					login(request, user)
+					return redirect(reverse_lazy("home"))
+				else:
+					context['error'] = "Usuario não ativo"
+					return render(request, 'default/login.html',{'form':form,'context':context})
 			else:
-				context['error'] = True
+				context['error'] = "Usuário não cadastrado"
 				return render(request, 'default/login.html',{'form':form,'context':context})
 		else:
 		    form = LoginForm()
@@ -189,7 +193,7 @@ class UserRegister(JSONResponseMixin,View):
 			cpf = request.POST['cpf']
 			rg = request.POST['rg']
 			orgaoemissor = request.POST['orgaoemissor']
-			foto = request.FILES['foto']
+			foto = request.FILES.get('foto', None)
 
 			cep = request.POST['cep']
 			rua = request.POST['rua']
@@ -293,6 +297,7 @@ class UserRegister(JSONResponseMixin,View):
 				usuario.orgaoemissor = orgaoemissor
 				usuario.foto = foto
 				usuario.id_endereco = id_endereco
+				usuario.is_active =  True
 				usuario.save()
 
 				for listphone in listphones:

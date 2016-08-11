@@ -3,6 +3,7 @@
 {%block content%}
   <h2>Login</h2>
   <p>Não lembra a senha? <a href="/reset/password_reset">Clique aqui.</a></p>
+  <p>{{ context.error}}</p>
   <form id="form-register" class="p-t-15" method="POST" role="form">
     {% csrf_token %}
     <div class="row">
