@@ -19,9 +19,10 @@ from django.forms import formset_factory
 ##################################################
 #				CUSTOM IMPORTS                   #
 ##################################################
-from apps.default.models import Projeto, Usuario, Empresa, Logradouro, Endereco, TipoEmpresa, TipoTelefone, TelefoneEmpresa # MODELS
+from apps.default.models import Projeto, Usuario, Empresa, Logradouro, Endereco, TipoEmpresa, TipoTelefone, TelefoneUsuario # MODELS
 from .models import Funcionario # MODELS
 from .forms import EmployeeRegisterForm
+from apps.default.forms import PhoneForm # PHONE FORMS
 from apps.default.views import JSONResponseMixin
 ##################################################
 
@@ -36,12 +37,15 @@ from apps.default.views import JSONResponseMixin
 class EmployeeRegister(JSONResponseMixin,View):
 	def get(self, request):
 		form = EmployeeRegisterForm
-		return render (request, 'subclasses/usuario/employee/register.html', {'form':form})
+		formset = formset_factory(PhoneForm)
+		return render (request, 'subclasses/usuario/employee/register.html', {'form':form, 'formset':formset})
 
 	def post(self, request, *args, **kwargs):
 		context = {}
 		if request.method == 'POST':		    
 			form = EmployeeRegisterForm(request.POST,request.FILES)
+			PhoneFormSet = formset_factory(PhoneForm)		
+			formset = PhoneFormSet(request.POST, request.FILES)
 			
 			nome = request.POST['nome']
 			sobrenome = request.POST['sobrenome']
@@ -66,54 +70,73 @@ class EmployeeRegister(JSONResponseMixin,View):
 			complemento = request.POST['complemento']
 			pontoreferencia = request.POST['pontoreferencia']
 
+			# EXTRAS
 			nickname = request.POST['nickname']
 
 			
 			if not nome:
-				context['Nome'] = ' cannot be empty !'
+				context['error_msg'] = 'nome cannot be empty !'
 			if not sobrenome:
-				context['Sobrenome'] = ' cannot be empty !'
+				context['error_msg'] = 'sobrenome cannot be empty !'
 			if not email:
-				context['E-mail'] = ' cannot be empty !'
+				context['error_msg'] = 'email cannot be empty !'
 			if not password:
-				context['password'] = ' cannot be empty !'
+				context['error_msg'] = 'password cannot be empty !'
 
 			if not tipo_usuario:
-				context['Tipo'] = ' cannot be empty !'
+				context['error_msg'] = 'tipo_usuario cannot be empty !'
 			if not genero:
-				context['Genero'] = ' cannot be empty !'
+				context['error_msg'] = 'genero cannot be empty !'
 			if not data_nascimento:
-				context['Data de nascimento'] = ' cannot be empty !'
+				context['error_msg'] = 'data_nascimento cannot be empty !'
 			if not cpf:
-				context['CPF'] = ' cannot be empty !'
+				context['error_msg'] = 'cpf cannot be empty !'
 			if not rg:
-				context['RG'] = ' cannot be empty !'
+				context['error_msg'] = 'rg cannot be empty !'
 			if not orgaoemissor:
-				context['Orgão'] = ' cannot be empty !'
+				context['error_msg'] = 'orgaoemissor cannot be empty !'
 			'''
 			if not foto:
 				context['error_msg'] = 'foto cannot be empty !'
 			'''
 			if not cep:
-				context['CEP'] = ' cannot be empty !'
+				context['error_msg'] = 'cep cannot be empty !'
 			if not rua:
-				context['Rua'] = ' cannot be empty !'
+				context['error_msg'] = 'rua cannot be empty !'
 			if not bairro:
-				context['Bairro'] = ' cannot be empty !'
+				context['error_msg'] = 'bairro cannot be empty !'
 			if not cidade:
-				context['Cidade'] = ' cannot be empty !'
+				context['error_msg'] = 'cidade cannot be empty !'
 			if not estado:
-				context['Estado'] = ' cannot be empty !'
+				context['error_msg'] = 'estado cannot be empty !'
 			if not pais:
-				context['Pais'] = ' cannot be empty !'
+				context['error_msg'] = 'pais cannot be empty !'
 			if not numero:
-				context['Número'] = ' cannot be empty !'
+				context['error_msg'] = 'numero cannot be empty !'
 			if not complemento:
-				context['Complemento'] = ' cannot be empty !'
+				context['error_msg'] = 'complemento cannot be empty !'
 			if not pontoreferencia:
-				context['Refêrencia'] = ' cannot be empty !'
+				context['error_msg'] = 'pontoreferencia cannot be empty !'
+
+			# EXTRAS
 			if not nickname:
-				context['Nickname'] = ' cannot be empty !'
+				context['error_msg'] = 'nickname cannot be empty !'
+
+			listphones = []
+
+			if formset.is_valid():
+				for f in formset:
+					phone = f.cleaned_data
+					listphones.append([phone.get('tipo_telefone'),phone.get('numero')])
+
+					if not phone.get('tipo_telefone'):
+						context['Tipo Telefone'] = ' cannot be empty !'
+					if not phone.get('numero'):
+						context['Numero'] = ' cannot be empty !'
+			else:
+				for erro in formset.errors:					
+					context['error'] = erro
+				pass
 
 			if not context:
 
@@ -147,9 +170,17 @@ class EmployeeRegister(JSONResponseMixin,View):
 				usuario.id_endereco = id_endereco
 				usuario.save()
 
+				for listphone in listphones:
+					id_tipo_telefone = TipoTelefone.objects.filter(descricao=listphone[0])[0]			
+					teluser = TelefoneUsuario()
+					teluser.id_tipo_telefone = id_tipo_telefone
+					teluser.id_usuario = usuario
+					teluser.numero = listphone[1]
+					teluser.save()
+
 				funcionario = Funcionario()
 				funcionario.usuario = usuario
-				funcionario.nickname =  nickname
+				funcionario.nickname = nickname
 				funcionario.save()
 
 				return redirect(reverse_lazy("employee-list"))
@@ -157,7 +188,7 @@ class EmployeeRegister(JSONResponseMixin,View):
 			else:
 				form = EmployeeRegisterForm(request.POST)
 
-		return render (request, 'subclasses/usuario/employee/register.html', {'form':form ,'context':context})
+		return render(request, 'subclasses/usuario/employee/register.html', {'form': form, 'formset':formset})
 
 
 class EmployeeEdit(JSONResponseMixin,View):
