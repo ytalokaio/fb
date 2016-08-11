@@ -19,7 +19,7 @@ from django.forms import formset_factory
 ##################################################
 #				CUSTOM IMPORTS                   #
 ##################################################
-from apps.default.models import Projeto, Usuario, Empresa, Logradouro, Endereco, TipoEmpresa, TipoTelefone, TelefoneEmpresa # MODELS
+from apps.default.models import Projeto, Usuario, Empresa, Logradouro, Endereco, TipoEmpresa, TipoTelefone, TelefoneUsuario # MODELS
 from .models import Funcionario # MODELS
 from .forms import EmployeeRegisterForm
 from apps.default.forms import PhoneForm # PHONE FORMS
@@ -38,7 +38,7 @@ class EmployeeRegister(JSONResponseMixin,View):
 	def get(self, request):
 		form = EmployeeRegisterForm
 		formset = formset_factory(PhoneForm)
-		return render (request, 'default/user/register.html', {'form':form, 'formset':formset})
+		return render (request, 'subclasses/usuario/employee/register.html', {'form':form, 'formset':formset})
 
 	def post(self, request, *args, **kwargs):
 		context = {}
@@ -188,7 +188,7 @@ class EmployeeRegister(JSONResponseMixin,View):
 			else:
 				form = EmployeeRegisterForm(request.POST)
 
-		return render(request, 'default/user/register.html', {'form': form, 'formset':formset})
+		return render(request, 'subclasses/usuario/employee/register.html', {'form': form, 'formset':formset})
 
 
 class EmployeeEdit(JSONResponseMixin,View):
