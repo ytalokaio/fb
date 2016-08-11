@@ -19,4 +19,4 @@ from apps.default.forms import CompanyRegisterForm
 class StartupRegisterForm(CompanyRegisterForm, forms.Form):
 
 	representante = forms.CharField(label='Representante:', max_length=150, required=True)
-	logo = forms.ImageField(label='Foto:', required=True)
+	logo = forms.ImageField(label='Logo:')

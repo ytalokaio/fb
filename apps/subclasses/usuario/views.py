@@ -53,7 +53,7 @@ class EmployeeRegister(JSONResponseMixin,View):
 			cpf = request.POST['cpf']
 			rg = request.POST['rg']
 			orgaoemissor = request.POST['orgaoemissor']
-			foto = request.POST['foto']
+			foto = request.FILES['foto']
 
 			cep = request.POST['cep']
 			rua = request.POST['rua']
@@ -207,7 +207,7 @@ class EmployeeEdit(JSONResponseMixin,View):
 			cpf = request.POST['cpf']
 			rg = request.POST['rg']
 			orgaoemissor = request.POST['orgaoemissor']
-			foto = request.POST['foto']
+			foto = request.FILES['foto']
 
 			cep = request.POST['cep']
 			rua = request.POST['rua']
