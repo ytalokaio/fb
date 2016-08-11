@@ -85,11 +85,6 @@
                      {{form.repetir_password}}
                    </div>
                    <div class="form-group form-group-default required">
-                     <label>{{form.repetir_password.label_tag}}</label>
-                     {{form.repetir_password}}
-                   </div>
-
-                   <div class="form-group form-group-default required">
                      <label>{{form.genero.label_tag}}</label>
                      {{form.genero}}
                    </div>
@@ -131,8 +126,6 @@
                           <tr>
                               <th scope="col">Tipo</th>
                               <th scope="col">Número</th>
-                              <th scope="col">Ramal</th>
-                              <th scope="col">Contato</th>
                           </tr>
                       </thead>
                       <tbody>
@@ -140,8 +133,6 @@
                           <tr id="{{ form.prefix }}-row">
                               <td style="text-align:center;">{{ form.tipo_telefone }}</td>
                               <td>{{ form.numero }}</td>
-                              <td>{{ form.ramal }}</td>
-                              <td>{{ form.nome_contato }}</td>
                               <td></td>
                           </tr>
                           {% endfor %}
@@ -212,8 +203,8 @@
                    <div class="row clearfix">
                      <div class="col-sm-3">
                        <div class="form-group form-group-default required">
-                         <label>{{form.numeroed.label_tag}}</label>
-                         {{form.numeroed}}
+                         <label>{{form.numero.label_tag}}</label>
+                         {{form.numero}}
                        </div>
                      </div>
                      <div class="col-sm-12">
@@ -287,39 +278,6 @@
 
       var hostname = location.host
 
-      //Service CNPJ
-      function get_cnpj_data(value){
-         var cnpj = value.replace(/\D/g,'');
-         var url = "http://"+hostname+"/framework/service/cnpj/"
-         if(cnpj){
-            $.ajax({
-              type: 'GET',
-              url: url,
-              data:{'cnpj':cnpj},
-              dataType:'json',
-              success: function(response) {
-                  console.log(response)
-                  document.getElementById("id_razaosocial").value = response.nome
-                  if (response.fantasia){
-                    document.getElementById("id_nomefantasia").value = response.fantasia
-                  }else{
-                    document.getElementById("id_nomefantasia").value = response.nome
-                  }
-                  document.getElementById("id_pais").value = 'Brazil'
-                  document.getElementById("id_estado").value = response.uf
-                  document.getElementById("id_cep").value = response.cep
-                  document.getElementById("id_cidade").value = response.municipio
-                  document.getElementById("id_bairro").value = response.bairro
-                  document.getElementById("id_rua").value = response.logradouro
-                  document.getElementById("id_numeroed").value = response.numero
-                  document.getElementById("id_complemento").value = response.complemento
-              },
-              error: function(response) {
-                  console.log(response)
-              }
-            });
-         }
-      };
       //Service CEP
       function get_cep_data(value){
          var cep = value.replace(/\D/g,'');
@@ -332,7 +290,7 @@
               dataType:'json',
               success: function(response) {
                   console.log(response)
-                  document.getElementById("id_estado").value = response.uf
+                  document.getElementById("id_estado").value = response.estado
                   document.getElementById("id_cidade").value = response.cidade
                   document.getElementById("id_bairro").value = response.bairro
                   document.getElementById("id_rua").value = response.logradouro
