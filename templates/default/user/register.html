@@ -53,7 +53,7 @@
                
              </div>
            </div>
-           
+           {{form.errors}}
            <div class="col-md-7">
              <div class="padding-30">               
                  <p>Dados</p>
@@ -260,6 +260,7 @@
    <script src="{% static 'js/default/form_wizard.js' %}" type="text/javascript"></script>
    <script src="{% static 'js/default/jquery.bootstrap.wizard.min.js' %}" type="text/javascript">
    </script>
+   <script src="{% static 'js/default/bootstrap-datepicker.js' %}" type="text/javascript"></script>
    <script>
       $(document).ready(function() {
 
@@ -274,6 +275,10 @@
 
          //Select2
          $("#id_tipo_empresa").select2();
+
+
+        //Date Picker
+        $('#id_data_nascimento').datepicker({ format: 'yyyy-mm-dd' });
       });
 
       var hostname = location.host
