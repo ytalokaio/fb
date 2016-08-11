@@ -19,7 +19,7 @@ from django.forms import formset_factory
 ##################################################
 #				CUSTOM IMPORTS                   #
 ##################################################
-from .models import Projeto, Usuario, Empresa, Logradouro, Endereco, TipoEmpresa, TipoTelefone, TelefoneEmpresa # MODELS
+from .models import Projeto, Usuario, Empresa, Logradouro, Endereco, TipoEmpresa, TipoTelefone, TelefoneUsuario, TelefoneEmpresa # MODELS
 from .forms import LoginForm, RegisterForm # AUTH FORMS
 from .forms import ProfileForm # PROFILE FORM
 from .forms import UserRegisterForm # USER FORMS
@@ -169,12 +169,15 @@ class Profile(JSONResponseMixin,UpdateView):
 class UserRegister(JSONResponseMixin,View):
 	def get(self, request):
 		form = UserRegisterForm
-		return render (request, 'default/user/register.html', {'form':form})
+		formset = formset_factory(PhoneForm)
+		return render (request, 'default/user/register.html', {'form':form, 'formset':formset})
 
 	def post(self, request, *args, **kwargs):
 		context = {}
 		if request.method == 'POST':		    
 			form = UserRegisterForm(request.POST,request.FILES)
+			PhoneFormSet = formset_factory(PhoneForm)		
+			formset = PhoneFormSet(request.POST, request.FILES)
 			
 			nome = request.POST['nome']
 			sobrenome = request.POST['sobrenome']
@@ -244,6 +247,22 @@ class UserRegister(JSONResponseMixin,View):
 			if not pontoreferencia:
 				context['error_msg'] = 'pontoreferencia cannot be empty !'
 
+			listphones = []
+
+			if formset.is_valid():
+				for f in formset:
+					phone = f.cleaned_data
+					listphones.append([phone.get('tipo_telefone'),phone.get('numero')])
+
+					if not phone.get('tipo_telefone'):
+						context['Tipo Telefone'] = ' cannot be empty !'
+					if not phone.get('numero'):
+						context['Numero'] = ' cannot be empty !'
+			else:
+				for erro in formset.errors:					
+					context['error'] = erro
+				pass
+
 			if not context:
 
 				id_logradouro = Logradouro()
@@ -276,12 +295,20 @@ class UserRegister(JSONResponseMixin,View):
 				usuario.id_endereco = id_endereco
 				usuario.save()
 
+				for listphone in listphones:
+					id_tipo_telefone = TipoTelefone.objects.filter(descricao=listphone[0])[0]			
+					teluser = TelefoneUsuario()
+					teluser.id_tipo_telefone = id_tipo_telefone
+					teluser.id_usuario = usuario
+					teluser.numero = listphone[1]
+					teluser.save()
+
 				return redirect(reverse_lazy("user-list"))
 
 			else:
 				form = UserRegisterForm(request.POST)
 
-		return render(request, 'default/user/register.html', {'form': form})
+		return render(request, 'default/user/register.html', {'form': form, 'formset':formset})
 
 
 class UserEdit(JSONResponseMixin,View):

@@ -470,8 +470,8 @@ class PhoneForm(forms.Form):
     # FIEDS TELEFONE
     tipo_telefone = forms.ModelChoiceField (TipoTelefone, label='Tipo de Telefone:', widget=forms.Select())
     numero = forms.CharField(label='Numero:', max_length=15)
-    ramal = forms.CharField(label='Ramal:', max_length=4)
-    nome_contato = forms.CharField(label='Contato:', max_length=45)
+    ramal = forms.CharField(label='Ramal:', max_length=4, required=False)
+    nome_contato = forms.CharField(label='Contato:', max_length=45, required=False)
 
     def __init__(self, *args, **kwargs):
         super(PhoneForm, self).__init__(*args, **kwargs)
