@@ -201,10 +201,9 @@ class StartupEdit(JSONResponseMixin,View):
 		empresa = Empresa.objects.get(pk=startup.empresa.pk)
 		telefones = TelefoneEmpresa.objects.filter(id_empresa=empresa.pk)
 
-		if telefones:
-			PhoneFormSet = formset_factory(PhoneForm,extra=0)
-		else:
-			PhoneFormSet = formset_factory(PhoneForm,extra=1)
+		
+		PhoneFormSet = formset_factory(PhoneForm,extra=0)
+		
 
 		data = []
 		for telefone in telefones:
