@@ -131,7 +131,7 @@ class Usuario(AbstractBaseUser):
 	rg = models.CharField(max_length=12, null=True, blank=True)
 	orgaoemissor = models.CharField(max_length=45,null=True, blank=True)
 	foto = models.ImageField(upload_to="default/users",null=True, blank=True)
-	is_active = models.BooleanField(default=True)
+	is_active = models.BooleanField(default=False)
 	is_admin = models.BooleanField(default=False)
 
 	objects = UserManager()

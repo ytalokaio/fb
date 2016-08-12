@@ -504,7 +504,7 @@ class UserEdit(JSONResponseMixin,View):
 
 
 class UserList(JSONResponseMixin,ListView):
-	queryset = Usuario.objects.filter(is_admin=False)
+	queryset = Usuario.objects.filter(is_admin=False).filter(is_active=True)
 	template_name = 'default/user/list.html'
 
 	def get_context_data(self, **kwargs):
