@@ -1,3 +1,16 @@
-from django.contrib import admin
+#-*- coding: utf-8 -*-
 
-# Register your models here.
+##################################################
+#				DJANGO IMPORTS                   #
+##################################################
+from django.contrib import admin
+##################################################
+
+##################################################
+#				CUSTOM IMPORTS                   #
+##################################################
+from .models import Startup
+##################################################
+
+# Registra as alteracoes no painel admin
+admin.site.register(Startup)
