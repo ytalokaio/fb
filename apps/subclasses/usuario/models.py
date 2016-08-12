@@ -6,7 +6,7 @@ from apps.default.models import Usuario
 '''
 class Funcionario(models.Model):
 	id_funcionario = models.AutoField(primary_key=True)
-	usuario = models.OneToOneField(Usuario, on_delete = models.DO_NOTHING, related_name='funcionario_name')
+	usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE, related_name='funcionario_name')
 	nickname = models.CharField(max_length=20,null=True, blank=True)
 	def __str__(self):
 		return self.nickname
