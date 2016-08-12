@@ -189,8 +189,9 @@ class StartupRegister(JSONResponseMixin,View):
 				return redirect(reverse_lazy("startup-list"))
 
 		else:
-			form = StartupRegisterForm
-			formset = formset_factory(PhoneForm)
+			PhoneFormSet = formset_factory(PhoneForm)		
+			formset = PhoneFormSet(request.POST, request.FILES)
+			form = StartupRegisterForm(request.POST, request.FILES)
 
 		return render(request, 'subclasses/empresa/startup/register.html', {'form': form, 'formset':formset ,'context':context})
 
