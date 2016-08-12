@@ -179,8 +179,8 @@ class TelefoneUsuario(models.Model):
 
 class TelefoneEmpresa(models.Model):
 	id_telefone_empresa = models.AutoField(primary_key=True)
-	id_tipo_telefone = models.ForeignKey('TipoTelefone', on_delete=models.DO_NOTHING)
-	id_empresa = models.ForeignKey('Empresa', on_delete=models.DO_NOTHING)
+	id_tipo_telefone = models.ForeignKey('TipoTelefone', on_delete=models.CASCADE)
+	id_empresa = models.ForeignKey('Empresa', on_delete=models.CASCADE)
 	numero = models.CharField(max_length=11)
 	ramal = models.CharField(max_length=4)
 	nome_contato = models.CharField(max_length=45)
