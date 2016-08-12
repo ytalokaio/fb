@@ -19,7 +19,7 @@ from django.forms import formset_factory
 ##################################################
 #				CUSTOM IMPORTS                   #
 ##################################################
-from apps.default.models import Projeto, Usuario, Empresa, Logradouro, Endereco, TipoEmpresa, TipoTelefone, TelefoneUsuario # MODELS
+from apps.default.models import Projeto, Usuario, Empresa, Logradouro, Endereco, TipoEmpresa, TipoTelefone, TelefoneUsuario, TipoUsuario, Genero # MODELS
 from .models import Funcionario # MODELS
 from .forms import EmployeeRegisterForm
 from apps.default.forms import PhoneForm # PHONE FORMS
@@ -160,8 +160,8 @@ class EmployeeRegister(JSONResponseMixin,View):
 				usuario.nome = nome
 				usuario.sobrenome = sobrenome
 				usuario.nomecompleto = nome +" "+sobrenome
-				usuario.tipo_usuario = tipo_usuario
-				usuario.genero = genero
+				usuario.id_tipo_usuario = TipoUsuario.objects.get(pk=tipo_usuario)
+				usuario.id_genero = Genero.objects.get(pk=genero)
 				usuario.data_nascimento = data_nascimento
 				usuario.cpf = cpf
 				usuario.rg = rg
@@ -199,6 +199,18 @@ class EmployeeEdit(JSONResponseMixin,View):
 		id_endereco = Endereco.objects.get(pk=usuario.id_endereco.pk)
 		id_logradouro = Logradouro.objects.get(pk=id_endereco.id_logradouro.pk)
 
+		telefones = TelefoneUsuario.objects.filter(id_usuario=usuario.pk)
+		PhoneFormSet = formset_factory(PhoneForm,extra=0)
+		
+		data = []
+		for telefone in telefones:
+			data.append({'tipo_telefone':telefone.id_tipo_telefone,'numero':telefone.numero})
+		
+				
+		formset = PhoneFormSet(
+			initial=data
+			)
+
 		form = EmployeeRegisterForm(
 			initial={
 			'nome': usuario.nome,
@@ -223,13 +235,15 @@ class EmployeeEdit(JSONResponseMixin,View):
 			'nickname': funcionario.nickname,		
 			}
 			)
-		return render (request, 'subclasses/usuario/employee/edit.html', {'form':form})
+		return render (request, 'subclasses/usuario/employee/edit.html', {'form':form,'formset':formset})
 
 	def post(self, request, pk=None, *args, **kwargs):
 		context = {}
 		if request.method == 'POST':		    
 			form = EmployeeRegisterForm(request.POST,request.FILES)
-			
+			PhoneFormSet = formset_factory(PhoneForm)		
+			formset = PhoneFormSet(request.POST, request.FILES)
+
 			nome = request.POST['nome']
 			sobrenome = request.POST['sobrenome']
 			email = request.POST['email']
@@ -253,6 +267,22 @@ class EmployeeEdit(JSONResponseMixin,View):
 			pontoreferencia = request.POST['pontoreferencia']
 
 			nickname = request.POST['nickname']
+
+			listphones = []
+
+			if formset.is_valid():
+				for f in formset:
+					phone = f.cleaned_data
+					listphones.append([phone.get('tipo_telefone'),phone.get('numero')])
+
+					if not phone.get('tipo_telefone'):
+						context['Tipo Telefone'] = ' cannot be empty !'
+					if not phone.get('numero'):
+						context['Numero'] = ' cannot be empty !'
+			else:
+				for erro in formset.errors:					
+					context['error'] = erro
+				pass
 
 			
 			if not nome:
@@ -304,6 +334,10 @@ class EmployeeEdit(JSONResponseMixin,View):
 				usuario = Usuario.objects.get(pk=funcionario.usuario.pk)
 				id_endereco = Endereco.objects.get(pk=usuario.id_endereco.pk)
 				id_logradouro = Logradouro.objects.get(pk=id_endereco.id_logradouro.pk)
+
+				telefones = TelefoneUsuario.objects.filter(id_usuario=usuario.pk)
+				for telefone in telefones:
+					telefone.delete()
 	
 				id_logradouro.cep = cep
 				id_logradouro.nome = nome
@@ -324,8 +358,8 @@ class EmployeeEdit(JSONResponseMixin,View):
 				usuario.nome = nome
 				usuario.sobrenome = sobrenome
 				usuario.nomecompleto = nome +" "+sobrenome
-				usuario.tipo_usuario = tipo_usuario
-				usuario.genero = genero
+				usuario.id_tipo_usuario = TipoUsuario.objects.get(pk=tipo_usuario)
+				usuario.id_genero = Genero.objects.get(pk=genero)
 				usuario.data_nascimento = data_nascimento
 				usuario.cpf = cpf
 				usuario.rg = rg
@@ -340,12 +374,22 @@ class EmployeeEdit(JSONResponseMixin,View):
 				funcionario.nickname =  nickname
 				funcionario.save()
 
+				for listphone in listphones:
+					id_tipo_telefone = TipoTelefone.objects.filter(descricao=listphone[0])[0]			
+					teluser = TelefoneUsuario()
+					teluser.id_tipo_telefone = id_tipo_telefone
+					teluser.id_usuario = usuario
+					teluser.numero = listphone[1]
+					teluser.save()
+
 				return redirect(reverse_lazy("employee-list"))
 
 			else:
 				form = EmployeeRegisterForm(request.POST)
+				PhoneFormSet = formset_factory(PhoneForm)		
+				formset = PhoneFormSet(request.POST, request.FILES)
 
-		return render (request, 'subclasses/usuario/employee/edit.html', {'form':form ,'context':context})
+		return render (request, 'subclasses/usuario/employee/edit.html', {'form':form ,'formset':formset,'context':context})
 
 
 class EmployeeList(JSONResponseMixin,ListView):
@@ -367,7 +411,7 @@ class EmployeeDetail(JSONResponseMixin,DetailView):
 
 
 class EmployeeDelete(JSONResponseMixin,DeleteView):
-	model = Funcionario
+	model = Usuario
 	success_url = reverse_lazy('employee-list')
 	template_name = 'subclasses/usuario/employee/delete.html'
 

@@ -74,7 +74,7 @@ class StartupRegister(JSONResponseMixin,View):
 
 			# EXTRAS
 			representante = request.POST['representante']
-			logo = request.FILES['logo']
+			logo = request.FILES.get('logo',None)
 
 			if not razaosocial:
 				context['Razão social'] = ' cannot be empty !'
@@ -198,7 +198,23 @@ class StartupRegister(JSONResponseMixin,View):
 class StartupEdit(JSONResponseMixin,View):
 	def get(self, request, pk=None):
 		startup = Startup.objects.get(pk=pk)
-		telefone = TelefoneEmpresa.objects.filter(id_empresa=pk)[0]
+		empresa = Empresa.objects.get(pk=startup.empresa.pk)
+		telefones = TelefoneEmpresa.objects.filter(id_empresa=empresa.pk)
+
+		if telefones:
+			PhoneFormSet = formset_factory(PhoneForm,extra=0)
+		else:
+			PhoneFormSet = formset_factory(PhoneForm,extra=1)
+
+		data = []
+		for telefone in telefones:
+			data.append({'tipo_telefone':telefone.id_tipo_telefone,'numero':telefone.numero,'ramal':telefone.ramal,'nome_contato':telefone.nome_contato})
+		
+				
+		formset = PhoneFormSet(
+			initial=data
+			)
+
 		form = StartupRegisterForm(
 			initial={
 			'razaosocial': startup.empresa.razaosocial,
@@ -216,23 +232,23 @@ class StartupEdit(JSONResponseMixin,View):
 		    'numeroed' :  startup.empresa.id_endereco.numero,
 		    'complemento' : startup.empresa.id_endereco.complemento,
 		    'pontoreferencia' :  startup.empresa.id_endereco.pontoreferencia,
-		    'tipo_telefone' : telefone.id_tipo_telefone,
-			'numero' : telefone.numero,
-			'ramal' : telefone.ramal,
-			'nome_contato' : telefone.nome_contato,
-
+		    
 			# EXTRAS
 		    'representante' : startup.representante,
 		    'logo' : startup.logo,
 			}
 			)
 
-		return render (request, 'subclasses/empresa/startup/edit.html', {'form':form ,'telefone':  telefone})
+		return render (request, 'subclasses/empresa/startup/edit.html', {'form':form ,'formset':  formset})
 
 	def post(self, request, pk=None, *args, **kwargs):
 		context = {}
 		if request.method == 'POST':		    
 			form = StartupRegisterForm(request.POST, request.FILES)
+			PhoneFormSet = formset_factory(PhoneForm)		
+			formset = PhoneFormSet(request.POST, request.FILES)	  
+
+					  
 			
 			razaosocial = request.POST['razaosocial']
 			nomefantasia = request.POST['nomefantasia']
@@ -252,14 +268,31 @@ class StartupEdit(JSONResponseMixin,View):
 			complemento = request.POST['complemento']
 			pontoreferencia = request.POST['pontoreferencia']
 
-			tipo_telefone = request.POST['tipo_telefone']
-			numero = request.POST['numero']
-			ramal = request.POST['ramal']
-			nome_contato = request.POST['nome_contato']
-
+			
 			# EXTRAS
 			representante = request.POST['representante']
-			logo = request.FILES['logo']
+			logo = request.FILES.get('logo',None)
+
+			listphones = []
+
+			if formset.is_valid():
+				for f in formset:
+					phone = f.cleaned_data
+					listphones.append([phone.get('tipo_telefone'),phone.get('numero'),phone.get('ramal'),phone.get('nome_contato')])
+
+					if not phone.get('tipo_telefone'):
+						context['Tipo Telefone'] = ' cannot be empty !'
+					if not phone.get('numero'):
+						context['Numero'] = ' cannot be empty !'
+					if not phone.get('ramal'):
+						context['Ramal'] = ' cannot be empty !'
+					if not phone.get('nome_contato'):
+						context['Contato'] = ' cannot be empty !'
+						pass
+			else:
+				for erro in formset.errors:					
+					context['error'] = erro
+				pass
 								
 			if not razaosocial:
 				context['Razão social'] = ' cannot be empty !'
@@ -296,15 +329,6 @@ class StartupEdit(JSONResponseMixin,View):
 			if not pontoreferencia:
 				context['Ponto de refêrencia'] = ' cannot be empty !'
 
-			if not tipo_telefone:
-				context['Tipo Telefone'] = ' cannot be empty !'
-			if not numero:
-				context['Numero'] = ' cannot be empty !'
-			if not ramal:
-				context['Ramal'] = ' cannot be empty !'
-			if not nome_contato:
-				context['Contato'] = ' cannot be empty !'
-
 			# EXTRAS
 			if not representante:
 				context['representante'] = ' cannot be empty !'
@@ -315,9 +339,13 @@ class StartupEdit(JSONResponseMixin,View):
 
 				statup = Startup.objects.get(pk=pk)
 
-				empresa = Empresa.objects.get(pk=statup.empresa)
-				id_endereco = Endereco.objects.get(id_endereco=empresa.id_endereco)
-				id_logradouro = Logradouro.objects.get(id_logradouro=id_endereco.id_logradouro)
+				empresa = Empresa.objects.get(pk=statup.empresa.pk)
+				telefones = TelefoneEmpresa.objects.filter(id_empresa=empresa.pk)
+				id_endereco = Endereco.objects.get(id_endereco=empresa.id_endereco.pk)
+				id_logradouro = Logradouro.objects.get(id_logradouro=id_endereco.id_logradouro.pk)
+
+				for telefone in telefones:
+					telefone.delete()
 
 				id_logradouro = Logradouro()
 				id_logradouro.cep = cep
@@ -346,15 +374,16 @@ class StartupEdit(JSONResponseMixin,View):
 				empresa.id_endereco = id_endereco
 				empresa.save()
 
-				id_tipo_telefone = TipoTelefone.objects.get(pk=tipo_telefone)
 				
-				telempresa = TelefoneEmpresa.objects.filter(id_empresa=pk)[0]
-				telempresa.id_tipo_telefone = id_tipo_telefone
-				telempresa.id_empresa = empresa
-				telempresa.numero = numero
-				telempresa.ramal = ramal
-				telempresa.nome_contato = nome_contato
-				telempresa.save()
+				for listphone in listphones:
+					id_tipo_telefone = TipoTelefone.objects.filter(descricao=listphone[0])[0]			
+					telempresa = TelefoneEmpresa()
+					telempresa.id_tipo_telefone = id_tipo_telefone
+					telempresa.id_empresa = empresa
+					telempresa.numero = listphone[1]
+					telempresa.ramal = listphone[2]
+					telempresa.nome_contato = listphone[3]
+					telempresa.save()
 
 				# EXTRAS
 				statup.representante = representante
@@ -364,9 +393,11 @@ class StartupEdit(JSONResponseMixin,View):
 				return redirect(reverse_lazy("startup-list"))
 
 		else:
-			form = StartupRegisterForm()
+			form = StartupRegisterForm(request.POST, request.FILES)
+			PhoneFormSet = formset_factory(PhoneForm)		
+			formset = PhoneFormSet(request.POST, request.FILES)	  
 
-		return render(request, 'subclasses/empresa/startup/edit.html', {'form': form,'context':context})
+		return render(request, 'subclasses/empresa/startup/edit.html', {'form': form,'formset':formset,'context':context})
 
 
 class StartupList(JSONResponseMixin,ListView):
@@ -388,7 +419,7 @@ class StartupDetail(JSONResponseMixin,DetailView):
 
 
 class StartupDelete(JSONResponseMixin,DeleteView):
-	model = Startup
+	model = Empresa
 	success_url = reverse_lazy('startup-list')
 	template_name = 'subclasses/empresa/startup/delete.html'
 
