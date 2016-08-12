@@ -171,14 +171,14 @@
                      </div>
                      <div class="col-sm-4">
                        <div class="form-group form-group-default">
-                         <label>{{form.estado.label_tag}}</label>
-                         {{form.estado}}
+                         <label>{{form.cep.label_tag}}</label>
+                         {{form.cep}}
                        </div>
                      </div>
                      <div class="col-sm-4">
                        <div class="form-group form-group-default">
-                         <label>{{form.cep.label_tag}}</label>
-                         {{form.cep}}
+                         <label>{{form.estado.label_tag}}</label>
+                         {{form.estado}}
                        </div>
                      </div>
                    </div>
@@ -228,22 +228,22 @@
          <ul class="pager wizard">
            <li class="next">
              <button class="btn btn-primary btn-cons btn-animated from-left fa fa-truck pull-right" type="button">
-               <span>Next</span>
+               <span>Próximo</span>
              </button>
            </li>
            <li class="next finish hidden">
              <button class="btn btn-primary btn-cons btn-animated from-left fa fa-cog pull-right" type="button">
-               <span>Finish</span>
+               <span>Cadastrar</span>
              </button>
            </li>
            <li class="previous first hidden">
              <button class="btn btn-default btn-cons btn-animated from-left fa fa-cog pull-right" type="button">
-               <span>First</span>
+               <span>Primeiro</span>
              </button>
            </li>
            <li class="previous">
              <button class="btn btn-default btn-cons pull-right" type="button">
-               <span>Previous</span>
+               <span>Anterior</span>
              </button>
            </li>
          </ul>
@@ -270,11 +270,14 @@
         })
 
          //Input mask
-         $("#id_cnpj").mask("99.999.999/9999-99"); <!-- CNPJ EXEMPLE : 06.990.590/0002-04 -->
+         $("#id_cpf").mask("999.999.999-99");
+         $("#id_rg").mask("99.999.999-9");
          $("#id_cep").mask("99.999-999");
 
          //Select2
-         $("#id_tipo_empresa").select2();
+         $("#id_tipo_usuario").select2();
+         $("#id_genero").select2();
+         $("#tipo_telefone").select2();
 
 
         //Date Picker

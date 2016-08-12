@@ -54,7 +54,7 @@
                               <div class="col-sm-3">
                                  <div class="form-group form-group-default">
                                     <label>Genero</label>
-                                    {{object.genero}}
+                                    {{object.id_genero}}
                                  </div>
                               </div>
                            </div>
@@ -82,7 +82,7 @@
                               <div class="col-sm-6">
                                  <div class="form-group form-group-default">
                                     <label>Tipo de Usuário</label>
-                                    {{object.tipo_usuario}}
+                                    {{object.id_tipo_usuario}}
                                  </div>
                               </div>
                            </div>
@@ -109,19 +109,19 @@
                               <div class="col-sm-4">
                                  <div class="form-group form-group-default required" aria-required="true">
                                     <label>País</label>
-                                    {{object.pais}}
+                                    {{object.id_endereco.id_logradouro.pais}}
                                  </div>
                               </div>
                               <div class="col-sm-4">
                                  <div class="form-group form-group-default">
                                     <label>Estado</label>
-                                    {{object.estado}}
+                                    {{object.id_endereco.id_logradouro.estado}}
                                  </div>
                               </div>
                               <div class="col-sm-4">
                                  <div class="form-group form-group-default">
                                     <label>CEP</label>
-                                    {{object.cep}}
+                                    {{object.id_endereco.id_logradouro.cep}}
                                  </div>
                               </div>
                            </div>
@@ -129,13 +129,13 @@
                               <div class="col-sm-6">
                                  <div class="form-group form-group-default">
                                     <label>Cidade</label>
-                                    {{object.cidade}}
+                                    {{object.id_endereco.id_logradouro.nome}}
                                  </div>
                               </div>
                               <div class="col-sm-6">
                                  <div class="form-group form-group-default">
                                     <label>Bairro</label>
-                                    {{object.bairro}}
+                                    {{object.id_endereco.id_logradouro.bairro}}
                                  </div>
                               </div>
                            </div>
@@ -143,7 +143,7 @@
                               <div class="col-sm-12">
                                  <div class="form-group form-group-default">
                                     <label>Rua</label>
-                                    {{object.rua}}
+                                    {{object.id_endereco.id_logradouro.bairro}}
                                  </div>
                               </div>
                            </div>
@@ -151,13 +151,13 @@
                               <div class="col-sm-6">
                                  <div class="form-group form-group-default">
                                     <label>Numero</label>
-                                    {{object.numero}}
+                                    {{object.id_endereco.numero}}
                                  </div>
                               </div>
                               <div class="col-sm-6">
                                  <div class="form-group form-group-default">
                                     <label>Complemento</label>
-                                    {{object.complemento}}
+                                    {{object.id_endereco.complemento}}
                                  </div>
                               </div>
                            </div>
@@ -165,7 +165,7 @@
                               <div class="col-sm-12">
                                  <div class="form-group form-group-default">
                                     <label>Ponto de referência</label>
-                                    {{object.pontoreferencia}}
+                                    {{object.id_endereco.pontoreferencia}}
                                  </div>
                               </div>
                            </div>
