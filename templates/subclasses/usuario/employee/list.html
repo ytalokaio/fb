@@ -64,7 +64,7 @@
                 <i class="pg-settings"></i>
                 </a>
                 {% if request.user.id_usuario != usuario.id_usuario %}
-                <a href="/framework/dashboard/employee/delete/{{funcionario.pk}}">
+                <a href="/framework/dashboard/employee/delete/{{funcionario.usuario.pk}}">
                 <i class="pg-eraser"></i>
                 </a>
                 {% endif %}
