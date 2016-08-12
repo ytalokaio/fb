@@ -57,7 +57,7 @@ class EmployeeRegister(JSONResponseMixin,View):
 			cpf = request.POST['cpf']
 			rg = request.POST['rg']
 			orgaoemissor = request.POST['orgaoemissor']
-			foto = request.FILES['foto']
+			foto = request.FILES.get('foto', None)
 
 			cep = request.POST['cep']
 			rua = request.POST['rua']
@@ -168,6 +168,7 @@ class EmployeeRegister(JSONResponseMixin,View):
 				usuario.orgaoemissor = orgaoemissor
 				usuario.foto = foto
 				usuario.id_endereco = id_endereco
+				usuario.is_active =  False
 				usuario.save()
 
 				for listphone in listphones:
@@ -238,7 +239,7 @@ class EmployeeEdit(JSONResponseMixin,View):
 			cpf = request.POST['cpf']
 			rg = request.POST['rg']
 			orgaoemissor = request.POST['orgaoemissor']
-			foto = request.FILES['foto']
+			foto = request.FILES.get('foto', None)
 
 			cep = request.POST['cep']
 			rua = request.POST['rua']
@@ -331,6 +332,7 @@ class EmployeeEdit(JSONResponseMixin,View):
 				usuario.orgaoemissor = orgaoemissor
 				usuario.foto = foto
 				usuario.id_endereco = id_endereco
+				usuario.is_active =  False
 				usuario.save()
 
 				
