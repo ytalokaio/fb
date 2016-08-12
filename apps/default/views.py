@@ -19,7 +19,7 @@ from django.forms import formset_factory
 ##################################################
 #				CUSTOM IMPORTS                   #
 ##################################################
-from .models import Projeto, Usuario, Empresa, Logradouro, Endereco, TipoEmpresa, TipoTelefone, TelefoneUsuario, TelefoneEmpresa # MODELS
+from .models import Projeto, Usuario, Empresa, Logradouro, Endereco, TipoEmpresa, TipoTelefone, TelefoneUsuario, TelefoneEmpresa, Genero, TipoUsuario # MODELS
 from .forms import LoginForm, RegisterForm # AUTH FORMS
 from .forms import ProfileForm # PROFILE FORM
 from .forms import UserRegisterForm # USER FORMS
@@ -207,7 +207,6 @@ class UserRegister(JSONResponseMixin,View):
 			complemento = request.POST['complemento']
 			pontoreferencia = request.POST['pontoreferencia']
 
-			
 			if not nome:
 				context['error_msg'] = 'nome cannot be empty !'
 			if not sobrenome:
@@ -290,8 +289,8 @@ class UserRegister(JSONResponseMixin,View):
 				usuario.nome = nome
 				usuario.sobrenome = sobrenome
 				usuario.nomecompleto = nome +" "+sobrenome
-				usuario.tipo_usuario = tipo_usuario
-				usuario.genero = genero
+				usuario.id_tipo_usuario = TipoUsuario.objects.get(pk=tipo_usuario)
+				usuario.id_genero = Genero.objects.get(pk=genero)
 				usuario.data_nascimento = data_nascimento
 				usuario.cpf = cpf
 				usuario.rg = rg
@@ -320,25 +319,76 @@ class UserRegister(JSONResponseMixin,View):
 class UserEdit(JSONResponseMixin,View):
 	def get(self, request, pk=None):
 		usuario = Usuario.objects.get(pk=pk)
+		id_endereco = Endereco.objects.get(pk=usuario.id_endereco.pk)
+		id_logradouro = Logradouro.objects.get(pk=id_endereco.id_logradouro.pk)
+
+		telefones = TelefoneUsuario.objects.filter(id_usuario=pk)
+		PhoneFormSet = formset_factory(PhoneForm,extra=0)
 		
+		data = []
+		for telefone in telefones:
+			data.append({'tipo_telefone':telefone.id_tipo_telefone,'numero':telefone.numero})
+		
+				
+		formset = PhoneFormSet(
+			initial=data
+			)
+
 		form = UserRegisterForm(
 			initial={
 			'nome': usuario.nome,
 			'sobrenome': usuario.sobrenome,
-			'email': usuario.email,			
+			'email': usuario.email,
+			'tipo_usuario' : usuario.id_tipo_usuario, 
+			'genero' : usuario.id_genero,
+			'data_nascimento' : usuario.data_nascimento,
+			'cpf' : usuario.cpf,
+			'rg' : usuario.rg,
+			'orgaoemissor' : usuario.orgaoemissor,
+			'foto' : usuario.foto,
+			'cep' : id_logradouro.cep, 
+			'rua' : id_logradouro.nome,
+			'bairro' : id_logradouro.bairro,
+			'cidade' : id_logradouro.cidade,
+			'estado' : id_logradouro.estado,
+			'pais' : id_logradouro.pais,
+			'numero': id_endereco.numero,
+			'complemento': id_endereco.complemento,
+			'pontoreferencia': id_endereco.pontoreferencia,
 			}
-			)
-		return render (request, 'default/user/edit.html', {'form':form})
+		)
+		
+		return render (request, 'default/user/edit.html', {'form':form, 'formset':formset})
 
 	def post(self, request, pk=None, *args, **kwargs):
 		context = {}
 		if request.method == 'POST':		    
-			form = UserRegisterForm(request.POST)
+			form = UserRegisterForm(request.POST,request.FILES)
+			PhoneFormSet = formset_factory(PhoneForm)		
+			formset = PhoneFormSet(request.POST, request.FILES)
 			
 			nome = request.POST['nome']
 			sobrenome = request.POST['sobrenome']
 			email = request.POST['email']
-			
+			tipo_usuario = request.POST['tipo_usuario']
+			genero = request.POST['genero']
+			data_nascimento = request.POST['data_nascimento']
+			cpf = request.POST['cpf']
+			rg = request.POST['rg']
+			orgaoemissor = request.POST['orgaoemissor']
+			foto = request.FILES.get('foto', None)
+
+			cep = request.POST['cep']
+			rua = request.POST['rua']
+			bairro = request.POST['bairro']
+			cidade = request.POST['cidade']
+			estado = request.POST['estado']
+			pais = request.POST['pais']
+
+			numero = request.POST['numero']
+			complemento = request.POST['complemento']
+			pontoreferencia = request.POST['pontoreferencia']
+
 			if not nome:
 				context['error_msg'] = 'nome cannot be empty !'
 			if not sobrenome:
@@ -346,20 +396,111 @@ class UserEdit(JSONResponseMixin,View):
 			if not email:
 				context['error_msg'] = 'email cannot be empty !'
 
-			if not context:				
+			if not tipo_usuario:
+				context['error_msg'] = 'tipo_usuario cannot be empty !'
+			if not genero:
+				context['error_msg'] = 'genero cannot be empty !'
+			if not data_nascimento:
+				context['error_msg'] = 'data_nascimento cannot be empty !'
+			if not cpf:
+				context['error_msg'] = 'cpf cannot be empty !'
+			if not rg:
+				context['error_msg'] = 'rg cannot be empty !'
+			if not orgaoemissor:
+				context['error_msg'] = 'orgaoemissor cannot be empty !'
+			'''
+			if not foto:
+				context['error_msg'] = 'foto cannot be empty !'
+			'''
+			if not cep:
+				context['error_msg'] = 'cep cannot be empty !'
+			if not rua:
+				context['error_msg'] = 'rua cannot be empty !'
+			if not bairro:
+				context['error_msg'] = 'bairro cannot be empty !'
+			if not cidade:
+				context['error_msg'] = 'cidade cannot be empty !'
+			if not estado:
+				context['error_msg'] = 'estado cannot be empty !'
+			if not pais:
+				context['error_msg'] = 'pais cannot be empty !'
+			if not numero:
+				context['error_msg'] = 'numero cannot be empty !'
+			if not complemento:
+				context['error_msg'] = 'complemento cannot be empty !'
+			if not pontoreferencia:
+				context['error_msg'] = 'pontoreferencia cannot be empty !'
+
+			listphones = []
+
+			if formset.is_valid():
+				for f in formset:
+					phone = f.cleaned_data
+					listphones.append([phone.get('tipo_telefone'),phone.get('numero')])
+
+					if not phone.get('tipo_telefone'):
+						context['Tipo Telefone'] = ' cannot be empty !'
+					if not phone.get('numero'):
+						context['Numero'] = ' cannot be empty !'
+			else:
+				for erro in formset.errors:					
+					context['error'] = erro
+				pass
+
+			if not context:
 
 				usuario = Usuario.objects.get(pk=pk)
+				id_endereco = Endereco.objects.get(pk=usuario.id_endereco.pk)
+				id_logradouro = Logradouro.objects.get(pk=id_endereco.id_logradouro.pk)
+
+				telefones = TelefoneUsuario.objects.filter(id_usuario=pk)
+				for telefone in telefones:
+					telefone.delete()
+				
+				id_logradouro.cep = cep
+				id_logradouro.nome = nome
+				id_logradouro.bairro = bairro
+				id_logradouro.cidade = cidade
+				id_logradouro.estado = estado
+				id_logradouro.pais = pais
+				id_logradouro.save()
+
+				
+				id_endereco.id_logradouro = id_logradouro
+				id_endereco.numero = numero
+				id_endereco.complemento = complemento
+				id_endereco.pontoreferencia = pontoreferencia
+				id_endereco.save()
+
+				
 				usuario.nome = nome
 				usuario.sobrenome = sobrenome
-				usuario.nomecompleto = nome +" "+sobrenome				
+				usuario.nomecompleto = nome +" "+sobrenome
+				usuario.id_tipo_usuario = TipoUsuario.objects.get(pk=tipo_usuario)
+				usuario.id_genero = Genero.objects.get(pk=genero)
+				usuario.data_nascimento = data_nascimento
+				usuario.cpf = cpf
+				usuario.rg = rg
+				usuario.orgaoemissor = orgaoemissor
+				usuario.foto = foto
+				usuario.id_endereco = id_endereco
+				usuario.is_active =  True
 				usuario.save()
+
+				for listphone in listphones:
+					id_tipo_telefone = TipoTelefone.objects.filter(descricao=listphone[0])[0]			
+					teluser = TelefoneUsuario()
+					teluser.id_tipo_telefone = id_tipo_telefone
+					teluser.id_usuario = usuario
+					teluser.numero = listphone[1]
+					teluser.save()
 
 				return redirect(reverse_lazy("user-list"))
 
 			else:
-				form = UserRegisterForm()
+				form = UserRegisterForm(request.POST)
 
-		return render(request, 'default/user/edit.html', {'form': form})
+		return render(request, 'default/user/edit.html', {'form': form, 'formset':formset})
 
 
 class UserList(JSONResponseMixin,ListView):
