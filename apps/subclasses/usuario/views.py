@@ -394,6 +394,7 @@ class EmployeeEdit(JSONResponseMixin,View):
 		return render (request, 'subclasses/usuario/employee/edit.html', {'form':form ,'formset':formset,'context':context})
 
 
+
 class EmployeeList(JSONResponseMixin,ListView):
 	queryset = Funcionario.objects.all()
 	template_name = 'subclasses/usuario/employee/list.html'

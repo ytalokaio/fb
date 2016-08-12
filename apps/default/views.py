@@ -896,7 +896,6 @@ class CompanyEdit(JSONResponseMixin,View):
 		return render(request, 'default/company/edit.html', {'form': form,'formset':formset,'context':context})
 
 
-
 class CompanyList(JSONResponseMixin,ListView):
 	model = Empresa
 	template_name = 'default/company/list.html'

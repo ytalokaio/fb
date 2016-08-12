@@ -400,6 +400,7 @@ class StartupEdit(JSONResponseMixin,View):
 		return render(request, 'subclasses/empresa/startup/edit.html', {'form': form,'formset':formset,'context':context})
 
 
+
 class StartupList(JSONResponseMixin,ListView):
 	model = Startup
 	template_name = 'subclasses/empresa/startup/list.html'
