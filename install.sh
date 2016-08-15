@@ -14,6 +14,7 @@ echo 'create database if not exists framework;' | mysql -u root -pframework
 python3 manage.py makemigrations
 python3 manage.py migrate
 mysql -u root -pframework framework<framework.sql
+initctl reload-configuration
 service nginx restart
 service gunicorn restart
 sudo reboot
