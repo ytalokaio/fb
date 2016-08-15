@@ -8,8 +8,8 @@ sudo apt-get -y install mysql-server
 pip3 install -r requirements.txt
 rm -r /etc/init/gunicorn.conf
 rm -r /etc/nginx/sites-available/django
-ln -s gunicorn.conf /etc/init/gunicorn.conf
-ln -s django /etc/nginx/sites-available/django
+ln -s /home/django/framework-base/gunicorn.conf /etc/init/gunicorn.conf
+ln -s /home/django/framework-base/django /etc/nginx/sites-available/django
 echo 'create database if not exists framework;' | mysql -u root -pframework
 python3 manage.py makemigrations
 python3 manage.py migrate
