@@ -30,6 +30,7 @@ urlpatterns += i18n_patterns(
 	url(r'^framework/', include('apps.default.urls')),
 	url(r'^framework/', include('apps.subclasses.empresa.urls')),
 	url(r'^framework/', include('apps.subclasses.usuario.urls')),
+	url(r'^framework/', include('apps.subclasses.escola.urls')),
 )
 
 
