@@ -16,11 +16,22 @@ from django.contrib.auth.decorators import login_required
 '''
 	DJANGO URLS
 '''
+
 urlpatterns = [
+	url(r'^admin/', include('smuggler.urls')), 
+    url(r'^accounts/', include('allauth.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^jet/', include('jet.urls', 'jet')),
+    url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     url(r'^i18n/', include('django.conf.urls.i18n'))
 ]
 
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += patterns('',
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    )
 
 '''
 	CUSTOM URLS
