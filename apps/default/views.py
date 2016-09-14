@@ -27,6 +27,7 @@ from .forms import CompanyRegisterForm # COMPANY FORMS
 from .forms import PhoneForm # PHONE FORMS
 import requests
 import re
+from datetime import datetime
 ##################################################
 
 
@@ -196,6 +197,9 @@ class UserRegister(JSONResponseMixin,View):
 			orgaoemissor = request.POST['orgaoemissor']
 			foto = request.FILES.get('foto', None)
 
+			if data_nascimento:
+				data_nascimento = datetime.strptime(data_nascimento, '%d/%m/%Y').strftime('%Y-%m-%d')
+
 			cep = request.POST['cep']
 			rua = request.POST['rua']
 			bairro = request.POST['bairro']
@@ -331,6 +335,12 @@ class UserEdit(JSONResponseMixin,View):
 		for telefone in telefones:
 			data.append({'tipo_telefone':telefone.id_tipo_telefone,'numero':telefone.numero})
 		
+		data_nascimento = usuario.data_nascimento
+		data_nasc = ""
+		if data_nascimento:
+			data_nascimento = str(data_nascimento).split("-")
+			data_nasc = data_nascimento[2]+"/"+data_nascimento[1]+"/"+data_nascimento[0]
+			
 				
 		formset = PhoneFormSet(
 			initial=data
@@ -343,7 +353,7 @@ class UserEdit(JSONResponseMixin,View):
 			'email': usuario.email,
 			'tipo_usuario' : usuario.id_tipo_usuario, 
 			'genero' : usuario.id_genero,
-			'data_nascimento' : usuario.data_nascimento,
+			'data_nascimento' : data_nasc,
 			'cpf' : usuario.cpf,
 			'rg' : usuario.rg,
 			'orgaoemissor' : usuario.orgaoemissor,
@@ -379,6 +389,9 @@ class UserEdit(JSONResponseMixin,View):
 			rg = request.POST['rg']
 			orgaoemissor = request.POST['orgaoemissor']
 			foto = request.FILES.get('foto', None)
+
+			if data_nascimento:
+				data_nascimento = datetime.strptime(data_nascimento, '%d/%m/%Y').strftime('%Y-%m-%d')
 
 			cep = request.POST['cep']
 			rua = request.POST['rua']
