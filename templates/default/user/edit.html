@@ -77,6 +77,14 @@
                      {{form.email}}
                    </div>
                    <div class="form-group form-group-default required">
+                     <label>{{form.password.label_tag}}</label>
+                     {{form.password}}
+                   </div>
+                   <div class="form-group form-group-default required">
+                     <label>{{form.repetir_password.label_tag}}</label>
+                     {{form.repetir_password}}
+                   </div>
+                   <div class="form-group form-group-default required">
                      <label>{{form.genero.label_tag}}</label>
                      {{form.genero}}
                    </div>
@@ -273,7 +281,7 @@
 
 
         //Date Picker
-        $('#id_data_nascimento').datepicker({ format: 'yyyy-mm-dd' });
+        $('#id_data_nascimento').mask("99/99/9999");
       });
 
       var hostname = location.host

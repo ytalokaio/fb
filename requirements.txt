@@ -4,3 +4,9 @@ mysqlclient
 requests
 gunicorn
 gevent
+django-jet
+django-simple-history
+django-extensions
+django-allauth
+django-smuggler
+django-debug-toolbar
