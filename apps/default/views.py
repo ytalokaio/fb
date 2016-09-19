@@ -186,7 +186,6 @@ class UserRegister(JSONResponseMixin,View):
 			formset = PhoneFormSet(request.POST, request.FILES)
 			
 			nome = request.POST['nome']
-			sobrenome = request.POST['sobrenome']
 			email = request.POST['email']
 			password = request.POST['password']
 			tipo_usuario = request.POST['tipo_usuario']
@@ -213,8 +212,6 @@ class UserRegister(JSONResponseMixin,View):
 
 			if not nome:
 				context['error_msg'] = 'nome cannot be empty !'
-			if not sobrenome:
-				context['error_msg'] = 'sobrenome cannot be empty !'
 			if not email:
 				context['error_msg'] = 'email cannot be empty !'
 			if not password:
@@ -291,8 +288,7 @@ class UserRegister(JSONResponseMixin,View):
 
 				usuario = Usuario.objects.create_user(email, password)
 				usuario.nome = nome
-				usuario.sobrenome = sobrenome
-				usuario.nomecompleto = nome +" "+sobrenome
+				usuario.nomecompleto = nome 
 				usuario.id_tipo_usuario = TipoUsuario.objects.get(pk=tipo_usuario)
 				usuario.id_genero = Genero.objects.get(pk=genero)
 				usuario.data_nascimento = data_nascimento
@@ -349,7 +345,6 @@ class UserEdit(JSONResponseMixin,View):
 		form = UserRegisterForm(
 			initial={
 			'nome': usuario.nome,
-			'sobrenome': usuario.sobrenome,
 			'email': usuario.email,
 			'tipo_usuario' : usuario.id_tipo_usuario, 
 			'genero' : usuario.id_genero,
@@ -380,7 +375,6 @@ class UserEdit(JSONResponseMixin,View):
 			formset = PhoneFormSet(request.POST, request.FILES)
 			
 			nome = request.POST['nome']
-			sobrenome = request.POST['sobrenome']
 			email = request.POST['email']
 			tipo_usuario = request.POST['tipo_usuario']
 			genero = request.POST['genero']
@@ -406,8 +400,6 @@ class UserEdit(JSONResponseMixin,View):
 
 			if not nome:
 				context['error_msg'] = 'nome cannot be empty !'
-			if not sobrenome:
-				context['error_msg'] = 'sobrenome cannot be empty !'
 			if not email:
 				context['error_msg'] = 'email cannot be empty !'
 
@@ -489,8 +481,7 @@ class UserEdit(JSONResponseMixin,View):
 
 				
 				usuario.nome = nome
-				usuario.sobrenome = sobrenome
-				usuario.nomecompleto = nome +" "+sobrenome
+				usuario.nomecompleto = nome 
 				usuario.id_tipo_usuario = TipoUsuario.objects.get(pk=tipo_usuario)
 				usuario.id_genero = Genero.objects.get(pk=genero)
 				usuario.data_nascimento = data_nascimento
