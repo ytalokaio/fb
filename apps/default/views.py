@@ -338,8 +338,8 @@ class UserEdit(JSONResponseMixin,View):
 		data = []
 		for telefone in telefones:
 			data.append({'tipo_telefone':telefone.id_tipo_telefone,'numero':telefone.numero})
-		
-				
+			
+			
 		if data:
 			PhoneFormSet = formset_factory(PhoneForm,extra=0)
 			formset = PhoneFormSet(
@@ -347,6 +347,7 @@ class UserEdit(JSONResponseMixin,View):
 				)
 		else:
 			formset = formset_factory(PhoneForm)
+
 
 		cep,rua,bairro,cidade,estado,pais,numeroed,complemento,pontoreferencia = '','','','','','','','',''
 		if usuario.id_endereco:

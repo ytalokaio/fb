@@ -59,6 +59,7 @@ class Empresa(models.Model):
 	def __str__(self):
 		return self.razaosocial
 
+
 class TipoUsuario(models.Model):
 	id_tipo_usuario= models.AutoField(primary_key=True)
 	descricao = models.CharField(max_length=45)
