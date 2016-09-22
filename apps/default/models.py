@@ -23,21 +23,21 @@ class Genero(models.Model):
 
 class Logradouro(models.Model):
 	id_logradouro = models.AutoField(primary_key=True)
-	cep = models.CharField(max_length=10)
-	nome = models.CharField(max_length=100)
-	bairro = models.CharField(max_length=45)
-	cidade = models.CharField(max_length=20)
-	estado = models.CharField(max_length=2)
-	pais = models.CharField(max_length=45)
+	cep = models.CharField(max_length=10, null=True)
+	nome = models.CharField(max_length=100, null=True)
+	bairro = models.CharField(max_length=45, null=True)
+	cidade = models.CharField(max_length=20, null=True)
+	estado = models.CharField(max_length=2, null=True)
+	pais = models.CharField(max_length=45, null=True)
 	def __str__(self):
 		return self.nome
 
 class Endereco(models.Model):
 	id_endereco = models.AutoField(primary_key=True)
 	id_logradouro = models.ForeignKey('Logradouro', on_delete=models.DO_NOTHING)
-	numero = models.IntegerField()
-	complemento = models.CharField(max_length=45)
-	pontoreferencia = models.CharField(max_length=45)
+	numero = models.IntegerField(null=True)
+	complemento = models.CharField(max_length=45, null=True)
+	pontoreferencia = models.CharField(max_length=45, null=True)
 	def __str__(self):
 		return self.complemento
 		
@@ -49,7 +49,7 @@ class TipoEmpresa(models.Model):
 
 class Empresa(models.Model):
 	id_empresa = models.AutoField(primary_key=True)
-	id_endereco = models.ForeignKey('Endereco', on_delete=models.DO_NOTHING)
+	id_endereco = models.ForeignKey('Endereco', null=True, on_delete=models.DO_NOTHING)
 	id_tipo_empresa = models.ForeignKey('TipoEmpresa', on_delete=models.DO_NOTHING)
 	razaosocial = models.CharField(max_length=100)
 	nomefantasia = models.CharField(max_length=100)
@@ -121,7 +121,7 @@ class UserManager(BaseUserManager):
 class Usuario(AbstractBaseUser):
 	id_usuario = models.AutoField(primary_key=True)
 	id_tipo_usuario = models.ForeignKey('TipoUsuario', on_delete=models.DO_NOTHING, null=True, blank=True)
-	id_endereco = models.ForeignKey('Endereco', on_delete=models.DO_NOTHING, null=True, blank=True)
+	id_endereco = models.ForeignKey('Endereco', null=True, on_delete=models.DO_NOTHING, blank=True)
 	id_genero = models.ForeignKey('Genero', on_delete=models.DO_NOTHING, null=True, blank=True)
 	nome = models.CharField(max_length=45,null=True, blank=True)
 	sobrenome = models.CharField(max_length=45,null=True, blank=True)

@@ -232,6 +232,7 @@ class UserRegister(JSONResponseMixin,View):
 			if not foto:
 				context['error_msg'] = 'foto cannot be empty !'
 			'''
+			'''
 			if not cep:
 				context['error_msg'] = 'cep cannot be empty !'
 			if not rua:
@@ -250,18 +251,22 @@ class UserRegister(JSONResponseMixin,View):
 				context['error_msg'] = 'complemento cannot be empty !'
 			if not pontoreferencia:
 				context['error_msg'] = 'pontoreferencia cannot be empty !'
+			'''
 
 			listphones = []
 
 			if formset.is_valid():
 				for f in formset:
 					phone = f.cleaned_data
-					listphones.append([phone.get('tipo_telefone'),phone.get('numero')])
+					if phone.get('tipo_telefone') and phone.get('numero'):
+						listphones.append([phone.get('tipo_telefone'),phone.get('numero')])
 
+					'''
 					if not phone.get('tipo_telefone'):
 						context['Tipo Telefone'] = ' cannot be empty !'
 					if not phone.get('numero'):
 						context['Numero'] = ' cannot be empty !'
+					'''
 			else:
 				for erro in formset.errors:					
 					context['error'] = erro
@@ -269,21 +274,25 @@ class UserRegister(JSONResponseMixin,View):
 
 			if not context:
 
-				id_logradouro = Logradouro()
-				id_logradouro.cep = cep
-				id_logradouro.nome = nome
-				id_logradouro.bairro = bairro
-				id_logradouro.cidade = cidade
-				id_logradouro.estado = estado
-				id_logradouro.pais = pais
-				id_logradouro.save()
+				is_endereco = False
+				if cep or rua or bairro or cidade or estado or pais:
+					id_logradouro = Logradouro()
+					id_logradouro.cep = cep
+					id_logradouro.nome = rua
+					id_logradouro.bairro = bairro
+					id_logradouro.cidade = cidade
+					id_logradouro.estado = estado
+					id_logradouro.pais = pais
+					id_logradouro.save()
 
-				id_endereco = Endereco()
-				id_endereco.id_logradouro = id_logradouro
-				id_endereco.numero = numero
-				id_endereco.complemento = complemento
-				id_endereco.pontoreferencia = pontoreferencia
-				id_endereco.save()
+					id_endereco = Endereco()
+					id_endereco.id_logradouro = id_logradouro
+					id_endereco.numero = numero
+					id_endereco.complemento = complemento
+					id_endereco.pontoreferencia = pontoreferencia
+					id_endereco.save()
+
+					is_endereco = True
 
 				usuario = Usuario.objects.create_user(email, password)
 				usuario.nome = nome
@@ -296,7 +305,8 @@ class UserRegister(JSONResponseMixin,View):
 				usuario.rg = rg
 				usuario.orgaoemissor = orgaoemissor
 				usuario.foto = foto
-				usuario.id_endereco = id_endereco
+				if is_endereco:
+					usuario.id_endereco = id_endereco
 				usuario.is_active =  True
 				usuario.save()
 
@@ -321,8 +331,6 @@ class UserRegister(JSONResponseMixin,View):
 class UserEdit(JSONResponseMixin,View):
 	def get(self, request, pk=None):
 		usuario = Usuario.objects.get(pk=pk)
-		id_endereco = Endereco.objects.get(pk=usuario.id_endereco.pk)
-		id_logradouro = Logradouro.objects.get(pk=id_endereco.id_logradouro.pk)
 
 		telefones = TelefoneUsuario.objects.filter(id_usuario=pk)
 		PhoneFormSet = formset_factory(PhoneForm,extra=0)
@@ -332,9 +340,25 @@ class UserEdit(JSONResponseMixin,View):
 			data.append({'tipo_telefone':telefone.id_tipo_telefone,'numero':telefone.numero})
 		
 				
-		formset = PhoneFormSet(
-			initial=data
-			)
+		if data:
+			PhoneFormSet = formset_factory(PhoneForm,extra=0)
+			formset = PhoneFormSet(
+				initial=data
+				)
+		else:
+			formset = formset_factory(PhoneForm)
+
+		cep,rua,bairro,cidade,estado,pais,numeroed,complemento,pontoreferencia = '','','','','','','','',''
+		if usuario.id_endereco:
+			cep = usuario.id_endereco.id_logradouro.cep
+			rua = usuario.id_endereco.id_logradouro.nome
+			bairro = usuario.id_endereco.id_logradouro.bairro
+			cidade = usuario.id_endereco.id_logradouro.cidade
+			estado = usuario.id_endereco.id_logradouro.estado
+			pais = usuario.id_endereco.id_logradouro.pais
+			numeroed = usuario.id_endereco.numero
+			complemento = usuario.id_endereco.complemento
+			pontoreferencia = usuario.id_endereco.pontoreferencia
 
 		form = UserRegisterForm(
 			initial={
@@ -348,15 +372,15 @@ class UserEdit(JSONResponseMixin,View):
 			'rg' : usuario.rg,
 			'orgaoemissor' : usuario.orgaoemissor,
 			'foto' : usuario.foto,
-			'cep' : id_logradouro.cep, 
-			'rua' : id_logradouro.nome,
-			'bairro' : id_logradouro.bairro,
-			'cidade' : id_logradouro.cidade,
-			'estado' : id_logradouro.estado,
-			'pais' : id_logradouro.pais,
-			'numero': id_endereco.numero,
-			'complemento': id_endereco.complemento,
-			'pontoreferencia': id_endereco.pontoreferencia,
+			'cep' : cep, 
+			'rua' : rua,
+			'bairro' : bairro,
+			'cidade' : cidade,
+			'estado' : estado,
+			'pais' : pais,
+			'numero': numeroed,
+			'complemento': complemento,
+			'pontoreferencia': pontoreferencia,
 			}
 		)
 		
@@ -414,6 +438,7 @@ class UserEdit(JSONResponseMixin,View):
 			if not foto:
 				context['error_msg'] = 'foto cannot be empty !'
 			'''
+			'''
 			if not cep:
 				context['error_msg'] = 'cep cannot be empty !'
 			if not rua:
@@ -432,18 +457,22 @@ class UserEdit(JSONResponseMixin,View):
 				context['error_msg'] = 'complemento cannot be empty !'
 			if not pontoreferencia:
 				context['error_msg'] = 'pontoreferencia cannot be empty !'
+			'''
 
 			listphones = []
 
 			if formset.is_valid():
 				for f in formset:
 					phone = f.cleaned_data
-					listphones.append([phone.get('tipo_telefone'),phone.get('numero')])
+					if phone.get('tipo_telefone') and phone.get('numero'):
+						listphones.append([phone.get('tipo_telefone'),phone.get('numero')])
 
+					'''
 					if not phone.get('tipo_telefone'):
 						context['Tipo Telefone'] = ' cannot be empty !'
 					if not phone.get('numero'):
 						context['Numero'] = ' cannot be empty !'
+					'''
 			else:
 				for erro in formset.errors:					
 					context['error'] = erro
@@ -459,20 +488,24 @@ class UserEdit(JSONResponseMixin,View):
 				for telefone in telefones:
 					telefone.delete()
 				
-				id_logradouro.cep = cep
-				id_logradouro.nome = nome
-				id_logradouro.bairro = bairro
-				id_logradouro.cidade = cidade
-				id_logradouro.estado = estado
-				id_logradouro.pais = pais
-				id_logradouro.save()
+				is_endereco = False
+				if cep or rua or bairro or cidade or estado or pais:
+					id_logradouro.cep = cep
+					id_logradouro.nome = nome
+					id_logradouro.bairro = bairro
+					id_logradouro.cidade = cidade
+					id_logradouro.estado = estado
+					id_logradouro.pais = pais
+					id_logradouro.save()
 
-				
-				id_endereco.id_logradouro = id_logradouro
-				id_endereco.numero = numero
-				id_endereco.complemento = complemento
-				id_endereco.pontoreferencia = pontoreferencia
-				id_endereco.save()
+					
+					id_endereco.id_logradouro = id_logradouro
+					id_endereco.numero = numero
+					id_endereco.complemento = complemento
+					id_endereco.pontoreferencia = pontoreferencia
+					id_endereco.save()
+
+					is_endereco = True
 
 				
 				usuario.nome = nome
@@ -485,7 +518,8 @@ class UserEdit(JSONResponseMixin,View):
 				usuario.rg = rg
 				usuario.orgaoemissor = orgaoemissor
 				usuario.foto = foto
-				usuario.id_endereco = id_endereco
+				if is_endereco:
+					usuario.id_endereco = id_endereco
 				usuario.is_active =  True
 				usuario.save()
 
@@ -632,6 +666,7 @@ class CompanyRegister(JSONResponseMixin,View):
 				context['error_msg'] = 'foto cannot be empty !'
 			'''
 
+			'''
 			if not cep:
 				context['CEP'] = ' cannot be empty !'
 			if not rua:
@@ -648,14 +683,17 @@ class CompanyRegister(JSONResponseMixin,View):
 				context['Número'] = ' cannot be empty !'
 			if not complemento:
 				context['Comlemento'] = ' cannot be empty !'			
-			
+			'''
+
 			listphones = []
 
 			if formset.is_valid():
 				for f in formset:
 					phone = f.cleaned_data
-					listphones.append([phone.get('tipo_telefone'),phone.get('numero'),phone.get('ramal'),phone.get('nome_contato')])
+					if phone.get('tipo_telefone') and phone.get('numero') and phone.get('ramal') and phone.get('nome_contato'):
+						listphones.append([phone.get('tipo_telefone'),phone.get('numero'),phone.get('ramal'),phone.get('nome_contato')])
 
+					'''
 					if not phone.get('tipo_telefone'):
 						context['Tipo Telefone'] = ' cannot be empty !'
 					if not phone.get('numero'):
@@ -665,6 +703,7 @@ class CompanyRegister(JSONResponseMixin,View):
 					if not phone.get('nome_contato'):
 						context['Contato'] = ' cannot be empty !'
 						pass
+					'''
 			else:
 				for erro in formset.errors:					
 					context['error'] = erro
@@ -675,21 +714,24 @@ class CompanyRegister(JSONResponseMixin,View):
 
 			if not context:
 
-				id_logradouro = Logradouro()
-				id_logradouro.cep = cep
-				id_logradouro.bairro = bairro
-				id_logradouro.cidade = cidade
-				id_logradouro.estado = estado
-				id_logradouro.pais = pais
-				id_logradouro.nome = rua
-				id_logradouro.save()
+				is_endereco = False
+				if cep or rua or bairro or cidade or estado or pais:
+					id_logradouro.cep = cep
+					id_logradouro.nome = nome
+					id_logradouro.bairro = bairro
+					id_logradouro.cidade = cidade
+					id_logradouro.estado = estado
+					id_logradouro.pais = pais
+					id_logradouro.save()
 
-				id_endereco = Endereco()
-				id_endereco.id_logradouro = id_logradouro
-				id_endereco.numero = numeroed
-				id_endereco.complemento = complemento
-				id_endereco.pontoreferencia = pontoreferencia
-				id_endereco.save()
+					
+					id_endereco.id_logradouro = id_logradouro
+					id_endereco.numero = numero
+					id_endereco.complemento = complemento
+					id_endereco.pontoreferencia = pontoreferencia
+					id_endereco.save()
+
+					is_endereco = True
 
 				id_tipo_empresa = TipoEmpresa.objects.get(pk=id_tipo_empresa)
 
@@ -699,8 +741,9 @@ class CompanyRegister(JSONResponseMixin,View):
 				empresa.cnpj = cnpj
 				empresa.verificada = True
 				empresa.ie = ie
-				empresa.id_tipo_empresa = id_tipo_empresa				
-				empresa.id_endereco = id_endereco
+				empresa.id_tipo_empresa = id_tipo_empresa	
+				if is_endereco:			
+					empresa.id_endereco = id_endereco
 				empresa.save()
 
 				for listphone in listphones:
@@ -727,17 +770,30 @@ class CompanyEdit(JSONResponseMixin,View):
 	def get(self, request, pk=None):
 		empresa = Empresa.objects.get(pk=pk)
 		phoneempresas = TelefoneEmpresa.objects.filter(id_empresa=pk)
-		PhoneFormSet = formset_factory(PhoneForm,extra=0)
 		
 		data = []
 		for phoneempresa in phoneempresas:
 			data.append({'tipo_telefone':phoneempresa.id_tipo_telefone,'numero':phoneempresa.numero,'ramal':phoneempresa.ramal,'nome_contato':phoneempresa.nome_contato})
 		
-				
-		formset = PhoneFormSet(
-			initial=data
-			)
+		if data:
+			PhoneFormSet = formset_factory(PhoneForm,extra=0)
+			formset = PhoneFormSet(
+				initial=data
+				)
+		else:
+			formset = formset_factory(PhoneForm)
 
+		cep,rua,bairro,cidade,estado,pais,numeroed,complemento,pontoreferencia = '','','','','','','','',''
+		if empresa.id_endereco:
+			cep = empresa.id_endereco.id_logradouro.cep
+			rua = empresa.id_endereco.id_logradouro.nome
+			bairro = empresa.id_endereco.id_logradouro.bairro
+			cidade = empresa.id_endereco.id_logradouro.cidade
+			estado = empresa.id_endereco.id_logradouro.estado
+			pais = empresa.id_endereco.id_logradouro.pais
+			numeroed = empresa.id_endereco.numero
+			complemento = empresa.id_endereco.complemento
+			pontoreferencia = empresa.id_endereco.pontoreferencia
 
 		form = CompanyRegisterForm(
 			initial={
@@ -747,15 +803,15 @@ class CompanyEdit(JSONResponseMixin,View):
 			'verificada': empresa.verificada,
 			'ie': empresa.ie,
 			'tipo_empresa': empresa.id_tipo_empresa,
-			'cep' :  empresa.id_endereco.id_logradouro.cep,
-		    'rua' :  empresa.id_endereco.id_logradouro.nome,
-		    'bairro' :  empresa.id_endereco.id_logradouro.bairro,
-		    'cidade' :  empresa.id_endereco.id_logradouro.cidade,
-		    'estado' :  empresa.id_endereco.id_logradouro.estado,
-		    'pais' : empresa.id_endereco.id_logradouro.pais,
-		    'numeroed' :  empresa.id_endereco.numero,
-		    'complemento' : empresa.id_endereco.complemento,
-		    'pontoreferencia' :  empresa.id_endereco.pontoreferencia,
+			'cep' :  cep,
+		    'rua' :  rua,
+		    'bairro' :  bairro,
+		    'cidade' :  cidade,
+		    'estado' :  estado,
+		    'pais' : pais,
+		    'numeroed' :  numeroed,
+		    'complemento' : complemento,
+		    'pontoreferencia' :  pontoreferencia,
 			}
 			)
 
@@ -796,13 +852,16 @@ class CompanyEdit(JSONResponseMixin,View):
 			if formset.is_valid():
 				for f in formset:
 					phone = f.cleaned_data
-					listphones.append([phone.get('tipo_telefone'),phone.get('numero'),phone.get('ramal'),phone.get('nome_contato')])
+					if phone.get('tipo_telefone') and phone.get('numero') and phone.get('ramal') and phone.get('nome_contato'):
+						listphones.append([phone.get('tipo_telefone'),phone.get('numero'),phone.get('ramal'),phone.get('nome_contato')])
 
+					'''
 					if not phone.get('tipo_telefone'):
 						context['Tipo Telefone'] = ' não pode estar vazio !'
 					if not phone.get('numero'):
 						context['Numero'] = ' não pode estar vazio !'					
 						pass
+					'''
 			else:
 				for erro in formset.errors:					
 					context['error'] = erro
@@ -824,6 +883,7 @@ class CompanyEdit(JSONResponseMixin,View):
 				context['error_msg'] = 'foto não pode estar vazio !'
 			'''
 
+			'''
 			if not cep:
 				context['CEP'] = ' não pode estar vazio !'
 			if not rua:
@@ -840,27 +900,31 @@ class CompanyEdit(JSONResponseMixin,View):
 				context['Número'] = ' não pode estar vazio !'
 			if not complemento:
 				context['Comlemento'] = ' não pode estar vazio !'
+			'''
 
 			if not context:
 
 				id_endereco = Endereco.objects.filter(id_endereco=empresa.pk)[0]
 				id_logradouro = Logradouro.objects.filter(id_logradouro=id_endereco.pk)[0]
 
-				id_logradouro = Logradouro()
-				id_logradouro.cep = cep
-				id_logradouro.bairro = bairro
-				id_logradouro.cidade = cidade
-				id_logradouro.estado = estado
-				id_logradouro.pais = pais
-				id_logradouro.nome = rua
-				id_logradouro.save()
+				is_endereco = False
+				if cep or rua or bairro or cidade or estado or pais:
+					id_logradouro.cep = cep
+					id_logradouro.nome = nome
+					id_logradouro.bairro = bairro
+					id_logradouro.cidade = cidade
+					id_logradouro.estado = estado
+					id_logradouro.pais = pais
+					id_logradouro.save()
 
-				
-				id_endereco.id_logradouro = id_logradouro
-				id_endereco.numero = numeroed
-				id_endereco.complemento = complemento
-				id_endereco.pontoreferencia = pontoreferencia
-				id_endereco.save()
+					
+					id_endereco.id_logradouro = id_logradouro
+					id_endereco.numero = numero
+					id_endereco.complemento = complemento
+					id_endereco.pontoreferencia = pontoreferencia
+					id_endereco.save()
+
+					is_endereco = True
 
 				id_tipo_empresa = TipoEmpresa.objects.get(pk=id_tipo_empresa)
 				
