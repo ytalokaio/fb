@@ -91,7 +91,7 @@ class Register(JSONResponseMixin,View):
 				user = Usuario.objects.create_user(email, password)
 				user.nome = nome
 				user.sobrenome = sobrenome
-				usuario.is_active =  True
+				user.is_active =  True
 				user.save()
 				return redirect(reverse_lazy("home"))
 
