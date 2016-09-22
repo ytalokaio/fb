@@ -255,7 +255,7 @@
       //Service CNPJ
       function get_cnpj_data(value){
        var cnpj = value.replace(/\D/g,'');
-       var url = "http://"+hostname+"/jdi/service/cnpj/"
+       var url = "http://"+hostname+"/framework/service/cnpj/"
        if(cnpj){
         $.ajax({
           type: 'GET',
@@ -288,7 +288,7 @@
       //Service CEP
       function get_cep_data(value){
        var cep = value.replace(/\D/g,'');
-       var url = "http://"+hostname+"/jdi/service/cep/"
+       var url = "http://"+hostname+"/framework/service/cep/"
        if(cep){
         $.ajax({
           type: 'GET',
