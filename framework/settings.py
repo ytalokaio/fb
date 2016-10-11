@@ -27,8 +27,17 @@ DATE_INPUT_FORMATS = ('%d-%m-%Y')
 '''
     SET TRUE TO ENABLE DEBUG
 '''
-DEBUG = True
+DEBUG = False
 
+'''
+    SET ADMINS TO ENABLE DEBUG
+'''
+
+ADMINS = (
+    ('3Y', 'contato@3ysoftwarehouse.com.br'),
+)
+
+MANAGERS = ADMINS
 
 '''
     PROJECT HOSTS
@@ -62,7 +71,7 @@ DJANGO_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
-    'debug_toolbar.apps.DebugToolbarConfig',
+    #'debug_toolbar.apps.DebugToolbarConfig',
 ]
 CUSTOM_APPS = [
     'apps.default', 
@@ -89,7 +98,7 @@ DJANGO_MIDDLEWARES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 CUSTOM_MIDDLEWARES = [
 
@@ -159,7 +168,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'framework',
         'USER': 'root',
-        'PASSWORD': 'framework',
+        'PASSWORD': '',
         'HOST': ''
     }
 }
@@ -215,6 +224,7 @@ SITE_ID = 1
     STATIC FILES
 '''
 STATIC_URL = '/static/'
+STATIC_ROOT = '/var/django/www/static'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
@@ -224,5 +234,27 @@ STATICFILES_DIRS = (
 '''
     UPLOADS MEDIA
 '''
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/var/django/www/media'
 MEDIA_URL = '/media/'
+
+'''
+    LOG CONFIG
+'''
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/home/django/debug.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

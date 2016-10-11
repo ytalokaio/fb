@@ -16,18 +16,18 @@ server {
 
     # Your Django project's media files - amend as required
     location /media  {
-        alias /home/django/framework-base/media;
+        alias /var/www/django/media;
     }
 
     # your Django project's static files - amend as required
     location /static {
-        alias /home/django/framework-base/static;
+        alias /var/www/django/static;
     }
 
     # Proxy the static assests for the Django Admin panel
-    location /static/admin {
-       alias /usr/lib/python2.7/dist-packages/django/contrib/admin/static/admin/;
-    }
+    #location /static/admin {
+    #   alias /usr/lib/python2.7/dist-packages/django/contrib/admin/static/admin/;
+    #}
 
     location / {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
