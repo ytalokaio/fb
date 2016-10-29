@@ -27,7 +27,7 @@ DATE_INPUT_FORMATS = ('%d-%m-%Y')
 '''
     SET TRUE TO ENABLE DEBUG
 '''
-DEBUG = False
+DEBUG = True
 
 '''
     SET ADMINS TO ENABLE DEBUG
@@ -54,8 +54,9 @@ AUTH_USER_MODEL = 'default.Usuario'
     APLICATIONS
 '''
 DJANGO_APPS = [
-    'jet.dashboard',
-    'jet',
+    'material',
+    'material.frontend',
+    'material.admin',
     'simple_history',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -168,7 +169,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'framework',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'manohacker',
         'HOST': ''
     }
 }
@@ -224,7 +225,6 @@ SITE_ID = 1
     STATIC FILES
 '''
 STATIC_URL = '/static/'
-STATIC_ROOT = '/var/django/www/static'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
@@ -236,25 +236,3 @@ STATICFILES_DIRS = (
 '''
 MEDIA_ROOT = '/var/django/www/media'
 MEDIA_URL = '/media/'
-
-'''
-    LOG CONFIG
-'''
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/home/django/debug.log',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}

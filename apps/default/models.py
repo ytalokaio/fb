@@ -135,7 +135,6 @@ class Usuario(AbstractBaseUser):
 	foto = models.ImageField(upload_to="default/users",null=True, blank=True)
 	is_active = models.BooleanField(default=False)
 	is_admin = models.BooleanField(default=False)
-
 	objects = UserManager()
 
 	USERNAME_FIELD = 'email'
