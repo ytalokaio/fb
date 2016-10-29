@@ -21,8 +21,8 @@ urlpatterns = [
 	url(r'^admin/', include('smuggler.urls')), 
     url(r'^accounts/', include('allauth.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^jet/', include('jet.urls', 'jet')),
-    url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
+    #url(r'^jet/', include('jet.urls', 'jet')),
+    #url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     url(r'^i18n/', include('django.conf.urls.i18n'))
 ]
 
