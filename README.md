@@ -19,4 +19,8 @@ Bem-vindo ao projeto FRAMEWORK.
 
 apt-get update
 apt-get install -y git
-git clone -b staging https://github.com/3ysoftwarehouse/framework-base.git /home/django/framework-base
+git clone -b master https://github.com/3ysoftwarehouse/framework-base.git /home/django/framework-base
+cd /home/django/framework-base
+./install.sh
+Coloque o nome do database "framework"
+e a senha "123456"
