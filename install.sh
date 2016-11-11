@@ -12,6 +12,7 @@ sudo apt-get -y install mysql-server
 pip3 install -r requirements.txt
 mkdir -p /var/www/django/static
 mkdir -p /var/www/django/media
+chown -c -R django /var/django/www/
 cp -a /media /var/www/django/media
 rm -r /etc/init/gunicorn.conf
 rm -r /etc/nginx/sites-available/django
