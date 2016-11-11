@@ -25,4 +25,9 @@ python3 manage.py collectstatic --noinput
 initctl reload-configuration
 service nginx restart
 service gunicorn restart
+sudo fallocate -l 1G /swapfile
+sudo chmod 600 /swapfile
+ls -lh /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
 sudo reboot
