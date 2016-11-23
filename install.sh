@@ -20,7 +20,7 @@ rm -r /etc/nginx/sites-available/django
 ln -s /home/django/framework-base/gunicorn.conf /etc/init/gunicorn.conf
 ln -s /home/django/framework-base/django /etc/nginx/sites-available/django
 echo 'create database if not exists '$database';' | mysql -u root -p$password
-python3 manage.py makemigrations
+#python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py collectstatic --noinput
 initctl reload-configuration
