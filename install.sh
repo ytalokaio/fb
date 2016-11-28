@@ -9,7 +9,7 @@ apt-get -y remove gunicorn
 apt-get -y install python3-pip libmysqlclient-dev libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password '$password''
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password '$password''
-sudo apt-get -y install mysql-server-5.6
+sudo apt-get -y install mysql-server
 pip3 install -r requirements.txt
 mkdir -p /var/www/django/static
 mkdir -p /var/www/django/media
