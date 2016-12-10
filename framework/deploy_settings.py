@@ -1,5 +1,11 @@
 from .settings import *
 STATIC_ROOT = '/var/django/www/static'
+MEDIA_ROOT = '/var/django/www/media'
+DEBUG = False
+ADMINS = (
+    ('3Y', 'contato@3ysoftwarehouse.com.br'),
+)
+ALLOWED_HOSTS = []
 '''
     DATABASE CONFIG
 '''
