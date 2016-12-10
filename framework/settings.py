@@ -228,11 +228,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
-STATIC_ROOT = '/var/django/www/static'
-
 
 '''
     UPLOADS MEDIA
 '''
-MEDIA_ROOT = '/var/django/www/media'
 MEDIA_URL = '/media/'
